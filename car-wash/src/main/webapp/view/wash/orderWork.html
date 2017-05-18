@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport"content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+		<link rel="stylesheet" href="${SPATH}/css/mui.min.css">
+		<link rel="stylesheet" href="${SPATH}/css/weui.css"/>
+		<link rel="stylesheet" href="${SPATH}/css/weui2.css"/>
+		<link rel="stylesheet" href="${SPATH}/layer.mobile-v2.0/layer_mobile/need/layer.css">
+		<title></title>
+	</head>
+<body style="background-color: #efeff4;">
+	<div id="pullrefresh" class="mui-content mui-scroll-wrapper">
+		<div class="mui-scroll" >
+			<div id="space"></div>
+		</div>
+	</div>
+
+</body>
+<script type="text/javascript" src="${SPATH}/js/jquery.min.js"></script>
+<script src="${SPATH}/js/mui.min.js"></script>
+<script src="${SPATH}/layer.mobile-v2.0/layer_mobile/layer.js"></script>
+<script type="text/javascript" charset="utf-8">
+
+	function startWash(id) {
+    	$.ajax({
+            url:"${CPATH}/wash/device/deviceCommand",
+            data:{
+            	"order_id" : id,
+            	"command" : 0
+            },
+            type:"post",
+            async: false,
+            dataType: 'json',
+            success:function(data){//ajax返回的数据
+            	console.log('data'+data);
+           		 if(data.rtnCode==0){
+           			layer.open({
+           			    content: data.rtnMsg
+           			    ,btn: '确定'
+           			    ,yes:function(){
+           			    	pulldownRefresh();
+           			    }
+           			  });
+           		 }else{
+           			layer.open({
+           			    content: data.rtnMsg
+           			    ,btn: '确定'
+           			  });
+           		 }
+            }
+       }); 
+	}
+
+	function endWash(id) {
+		$.ajax({
+            url:"${CPATH}/wash/device/deviceCommand",
+            data:{
+            	"order_id" : id,
+            	"command" : 1
+            },
+            type:"post",
+            async: false,
+            dataType: 'json',
+            success:function(data){//ajax返回的数据
+            	console.log('data'+data);
+           		 if(data.rtnCode==0){
+           			layer.open({
+           			    content: data.rtnMsg
+           			    ,btn: '确定'
+           			  });
+           		 }else{
+           			layer.open({
+           			    content: data.rtnMsg
+           			    ,btn: '确定'
+           			  });
+           		 }
+            }
+       }); 
+	}
+	
+	function openDevice(id) {
+		$.ajax({
+            url:"${CPATH}/wash/device/deviceCommand",
+            data:{
+            	"order_id" : id,
+            	"command" : 2
+            },
+            type:"post",
+            async: false,
+            dataType: 'json',
+            success:function(data){//ajax返回的数据
+            	console.log('data'+data);
+           		 if(data.rtnCode==0){
+           			layer.open({
+           			    content: data.rtnMsg
+           			    ,btn: '确定'
+         			    ,yes:function(){
+             			    pulldownRefresh();
+             			 }
+           			  });
+           		 }else{
+           			layer.open({
+           			    content: data.rtnMsg
+           			    ,btn: '确定'
+           			  });
+           		 }
+            }
+       }); 
+	}
+
+	/**
+	 * 下拉刷新具体业务实现
+	 */
+	function pulldownRefresh() {
+		setTimeout(function() {
+			page = 1;
+			//刷新的业务
+			
+			mui('#pullrefresh').pullRefresh().endPulldownToRefresh(); //refresh completed
+		}, 1500);
+	}
+
+	/**
+	 * 上拉加载具体业务实现
+	 */
+	var count = 1; 
+	function pullupRefresh() {
+		setTimeout(function() {
+			$.ajax({
+				type: "post",
+				url: "${CPATH}/wash/order/orderWork",
+				data: {
+					"pageNumber": count // 传过去的页码
+				},
+				dataType: "JSON",
+				success: function(data) {
+					count = count + 1;
+					var datalist = data.list;
+ 					mui('#pullrefresh').pullRefresh().endPullupToRefresh((datalist.length == 0)); //参数为true代表没有更多数据了。
+ 						for(var i = 0; i < datalist.length; i++) {
+ 						var div = document.createElement('div');
+ 						div.className = 'weui-form-preview';
+ 						div.style = 'margin-top: 10px;';	
+						var neirong = 
+				    		"<div class='weui-form-preview-hd'>"+
+		                		"<label class='weui-form-preview-label' style='font-size: 1em;height: ;'>订单号</label>"+
+		                		"<em class='weui-form-preview-value' style='font-size: 1em;'>"+datalist[i].order_no+"</em>"+
+		            		"</div>"+
+		            		"<div class='weui-form-preview-bd'>"+
+		                		"<p>"+
+		                    		"<label class='weui-form-preview-label'>车主</label>"+
+		                    		"<span class='weui-form-preview-value' >"+datalist[i].nick_name+datalist[i].car_number+"</span>"+
+		                		"</p>"+
+		                		"<p>"+
+		                    		"<label class='weui-form-preview-label'>电话</label>"+
+		                    		"<span class='weui-form-preview-value' >"+datalist[i].mobile+"</span>"+
+		                		"</p>"+
+		                		"<p>"+
+		                    		"<label class='weui-form-preview-label'>设备</label>"+
+		                    		"<span class='weui-form-preview-value' >"+datalist[i].device_name+"</span>"+
+		                		"</p>"+
+		                		"<p>"+
+		                    		"<label class='weui-form-preview-label'>支付时间</label>"+
+		                    		"<span class='weui-form-preview-value'>"+datalist[i].pay_time+"</span>"+
+		                		"</p>"+
+		            		"</div>";
+		            		if(datalist[i].order_status=="1"){
+		            			neirong = neirong +
+		            			"<div class='weui-form-preview-ft' onclick='startWash(&quot;"+datalist[i].id+"&quot;)'>"+
+		                			"<a class='weui-form-preview-btn weui-form-preview-btn-primary'>开始洗车</a>"+
+		            			"</div>";
+		            		}
+							if(datalist[i].order_status=="2"){
+								neirong = neirong +
+		            			"<div class='weui-form-preview-ft' >"+
+		            			"<button class='weui-form-preview-btn weui-form-preview-btn-primary' onclick='openDevice(&quot;"+datalist[i].id+"&quot;)'>开启设备</button>"+
+		            			"<button class='weui-form-preview-btn weui-form-preview-btn-primary' onclick='endWash(&quot;"+datalist[i].id+"&quot;)'>完成</button>"+
+		            		"</div>";
+		            		}
+		            		
+		            		div.innerHTML = neirong;
+						
+						$("#space").append(div);
+					}
+				},
+				error: function() {}
+			});
+		}, 1500);
+	}
+
+	mui.init({
+		pullRefresh : {
+			container : '#pullrefresh',
+			down : {
+				callback : pulldownRefresh
+			},
+			up : {
+				contentrefresh : '正在加载...',
+				callback : pullupRefresh
+			}
+		}
+	});
+	
+	if(mui.os.plus) {
+		mui.plusReady(function() {
+			setTimeout(function() {
+				mui('#pullrefresh').pullRefresh().pullupLoading();
+			}, 1000);
+
+		});
+	} else {
+		mui.ready(function() {
+			mui('#pullrefresh').pullRefresh().pullupLoading();
+		});
+	}
+
+	mui("#pullrefresh").on('tap', 'div', function(event) {
+		this.click();
+	});
+	mui("#pullrefresh").on('tap', 'button', function(event) {
+		this.click();
+	});
+
+	function getQueryString(name) { //输入参数名称
+		var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i"); //根据参数格式，正则表达式解析参数
+		var r = window.location.search.substr(1).match(reg);
+		if (r != null)
+			return unescape(r[2]);
+		return null; //返回参数值
+	}
+</script>
+</html>

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<!-- saved from url=(0016)https://weui.io/ -->
+<html lang="zh-cmn-Hans"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <title>服务评价</title>
+    <link rel="stylesheet" href="${SPATH}/css/weui.css">
+    <link rel="stylesheet" href="${SPATH}/css/example.css">
+    <link rel="stylesheet" href="${SPATH}/layer.mobile-v2.0/layer_mobile/need/layer.css">
+</head>
+ <body>
+ <div>
+    <div class="page__bd">
+
+        <div class="weui-cells__title">表单</div>
+        <div class="weui-cells weui-cells_form">
+            <div class="weui-cell">
+                <div class="weui-cell__hd">
+                	<label class="weui-label">车牌号</label>
+                </div>
+                <div class="weui-cell__bd">
+                    <input class="weui-input" id="car_number" name="car_number" value="" type="text" placeholder="请输入车牌"/>
+                </div>
+            </div>
+            <div class="weui-cell">
+                <div class="weui-cell__hd">
+                    <label class="weui-label">车辆型号</label>
+                </div>
+                <div class="weui-cell__bd">
+                    <input class="weui-input" id="car_model" name="car_model" value="" type="text" placeholder="请输入车辆型号"/>
+                </div>
+            </div>
+            
+        </div>
+        
+        <div class="weui-cells__tips">底部说明文字底部说明文字</div>
+        <div class="weui-btn-area">
+            <a class="weui-btn weui-btn_primary" href="javascript:update();" id="showTooltips">提交</a>
+        </div>
+    </div>
+</div>
+<script src="${SPATH}/js/zepto.min.js"></script>
+<script type="text/javascript" src="${SPATH}/js/jweixin-1.0.0.js"></script>
+<script src="${SPATH}/js/weui.min.js"></script>
+<script src="${SPATH}/js/example.js"></script>
+<script src="${SPATH}/layer.mobile-v2.0/layer_mobile/layer.js"></script>
+<script>
+function update(){
+	$.ajax({
+        url:"${CPATH}/car/member/editUserInfo",
+        data:{
+        	"car_number": $("#car_number").val(),
+        	"car_model": $("#car_model").val()
+        },
+        type:"post",
+        async: false,
+        dataType: 'json',
+        success:function(data){//ajax返回的数据
+        	console.log('data'+data);
+       		 if(data.rtnCode==0){
+       			layer.open({
+       			    content: data.rtnMsg
+       			    ,btn: '确定'
+       			  });
+       	 	}else{
+       	 	layer.open({
+   			    content: data.rtnMsg
+   			    ,btn: '确定'
+   			  });
+       	 	}
+        }
+   }); 
+}
+</script>
+
+ </body>
+</html>

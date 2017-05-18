@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>购买</title>
+  <!-- Tell the browser to be responsive to screen width -->
+  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+  <!-- Bootstrap 3.3.7 -->
+  <link rel="stylesheet" href="${SPATH}/bootstrap/css/bootstrap.min.css">
+
+  <!-- Theme style -->
+  <link rel="stylesheet" href="${SPATH}/dist/css/AdminLTE.min.css">
+  <link rel="stylesheet" href="${SPATH}/css/weui.css">
+    <link rel="stylesheet" href="${SPATH}/css/example.css">
+  <!-- AdminLTE Skins. Choose a skin from the css/skins
+       folder instead of downloading all of them to reduce the load. -->
+
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+  <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+  <![endif]-->
+</head>
+<body class="hold-transition  sidebar-mini">
+<form id="editForm" method="post" action="${CPATH}/car/order/pay">
+<div class="wrapper">
+ <div class="row">
+       <div class="col-md-4">
+          <!-- Widget: user widget style 1 -->
+          <div class="box box-widget widget-user">
+            <!-- Add the bg color to the header using any of the bg-* classes -->
+            <div class="widget-user-header bg-aqua-active">
+              <h3 class="widget-user-username">${washMember.nickName}</h3>
+              <h5 class="widget-user-desc">车主</h5>
+            </div>
+            <div class="widget-user-image">
+              <img class="img-circle" src="${washMember.img}" alt="User Avatar">
+            </div>
+
+          </div>
+			
+		</div>
+   </div>
+
+         <div style="width: 100%;position: fixed; bottom: 0px;font-weight: bold;text-align: center;background-color: #00a7d0;color: white; border: 1px solid #00a7d0;height:50px;line-height:50px;margin: auto;margin-top: 30px" onclick="topay()">支付</div>
+
+ <input type="hidden" id="set_meal_id" name="set_meal_id" value="${washSetMealData.id!}"> 
+<input type="hidden" id="device_mac" name="device_mac" value="${device_mac!}">
+</div>
+</form>
+<!-- jQuery 2.2.3 -->
+<script src="${SPATH}/js/jquery-2.2.3.min.js"></script>
+<!-- Bootstrap 3.3.7 -->
+<script src="${SPATH}/bootstrap/js/bootstrap.min.js"></script>
+<script src="${SPATH}/js/zepto.min.js"></script>
+<script type="text/javascript" src="${SPATH}/js/jweixin-1.0.0.js"></script>
+<script src="${SPATH}/js/weui.min.js"></script>
+<script src="${SPATH}/js/example.js"></script>
+<script src="${SPATH}/layer.mobile-v2.0/layer_mobile/layer.js"></script>
+
+<script>
+function topay(){
+	$.ajax({
+        url:"${CPATH}/car/order/check",
+        data:{
+        	"device_mac": $("#device_mac").val()
+        },
+        type:"post",
+        async: false,
+        //dataType: 'json',
+        success:function(data){//ajax返回的数据
+        	console.log('data'+data);
+       		 if(data.rtnCode==0){
+       			$("#editForm").submit();
+       	 	}else{
+       	 	layer.open({
+   			    content: data.rtnMsg
+   			    ,btn: '确定'
+   			  });
+       	 	}
+        }
+   }); 
+	
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>工作</title>
+  <!-- Tell the browser to be responsive to screen width -->
+  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+  <!-- Bootstrap 3.3.7 -->
+  <link rel="stylesheet" href="${SPATH}/bootstrap/css/bootstrap.min.css">
+
+  <!-- Theme style -->
+  <link rel="stylesheet" href="${SPATH}/dist/css/AdminLTE.min.css">
+  <link rel="stylesheet" href="${SPATH}/css/weui.css">
+    <link rel="stylesheet" href="${SPATH}/css/example.css">
+    <link rel="stylesheet" href="${SPATH}/layer.mobile-v2.0/layer_mobile/need/layer.css">
+  <!-- AdminLTE Skins. Choose a skin from the css/skins
+       folder instead of downloading all of them to reduce the load. -->
+
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+  <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+  <![endif]-->
+</head>
+<body class="hold-transition  sidebar-mini">
+<form id="editForm" method="post" action="${CPATH}/wash/work/forwardWork">
+<div class="wrapper">
+ <div class="row">
+       <div class="col-md-4">
+          <!-- Widget: user widget style 1 -->
+          <div class="box box-widget widget-user">
+            <!-- Add the bg color to the header using any of the bg-* classes -->
+            <div class="widget-user-header bg-aqua-active">
+              <h3 class="widget-user-username">${washMember.nickName}</h3>
+              <h5 class="widget-user-desc">洗车服务员</h5>
+            </div>
+            <div class="widget-user-image">
+              <img class="img-circle" src="${washMember.img}" alt="User Avatar">
+            </div>
+            <div class="box-footer">
+              <div class="row">
+                <div class="col-xs-4 border-right">
+                  <div class="description-block">
+                    <h5 class="description-header">${yesterdayFee}</h5>
+                    <span class="description-text">昨日金额</span>
+                  </div>
+                  <!-- /.description-block -->
+                </div>
+                <!-- /.col -->
+                <div class="col-xs-4 border-right">
+                  <div class="description-block">
+                    <h5 class="description-header">${sameMonthFee}</h5>
+                    <span class="description-text">当月金额</span>
+                  </div>
+                  <!-- /.description-block -->
+                </div>
+                <!-- /.col -->
+                <div class="col-xs-4">
+                  <div class="description-block">
+                    <h5 class="description-header">${lastMonthFee}</h5>
+                    <span class="description-text">上月金额</span>
+                  </div>
+                  <!-- /.description-block -->
+                </div>
+                <!-- /.col -->
+              </div>
+              <!-- /.row -->
+            </div>
+          </div>
+			<#if workRecordList??> 
+			<div class="box-footer">
+              <div class="row">
+              <#list workRecordList as x>
+                <div class="col-xs-4 border-right">
+                  <div class="description-block">
+                    <span class="description-text">${x.device_name!}</span>
+                  </div>
+                  <!-- /.description-block -->
+                </div>
+                <!-- /.col -->
+                <div class="col-xs-4 border-right">
+                  <div class="description-block">
+                    <span class="description-text">${x.work_on_time!}</span>
+                  </div>
+                  <!-- /.description-block -->
+                </div>
+                <!-- /.col -->
+                <div class="col-xs-4">
+                  <div class="description-block">
+                    <span class="description-text">${x.work_off_time!}</span>
+                  </div>
+                  <!-- /.description-block -->
+                </div>
+                <!-- /.col -->
+              </div>
+              </#list> 
+            </div>
+          </div>
+          </#if>
+		</div>
+   </div>
+   <#if jsonResult.rtnCode == 11>
+   <div style="width: 100%;position: fixed; bottom: 0px;font-weight: bold;text-align: center;background-color: #00a7d0;color: white; border: 1px solid #00a7d0;height:100px;line-height:50px;margin: auto;margin-top: 30px" onclick="toOrderHis()">历史订单</div>
+      <div style="width: 100%;position: fixed; bottom: 0px;font-weight: bold;text-align: center;background-color: #00d01a;color: white; border: 1px solid #00d01a;height:50px;line-height:50px;margin: auto;margin-top: 30px" onclick="startWork()">上班</div>
+   
+   <#elseif jsonResult.rtnCode == 10>
+         <div style="width: 100%;position: fixed; bottom: 0px;font-weight: bold;text-align: center;background-color: #00a7d0;color: white; border: 1px solid #00a7d0;height:100px;line-height:50px;margin: auto;margin-top: 30px" onclick="toOrder()">查看订单</div>
+   <div style="width: 100%;position: fixed; bottom: 0px;font-weight: bold;text-align: center;background-color: #f5104f;color: white; border: 1px solid #f5104f;height:50px;line-height:50px;margin: auto;margin-top: 30px" onclick="endWork()">下班</div>
+   <#elseif jsonResult.rtnCode == 20>
+   <div style="width: 100%;position: fixed; bottom: 0px;font-weight: bold;text-align: center;background-color: #00a7d0;color: white; border: 1px solid #00a7d0;height:50px;line-height:50px;margin: auto;margin-top: 30px" onclick="toOrder()">打开设备</div>
+   <#else>
+         <div style="width: 100%;position: fixed; bottom: 0px;font-weight: bold;text-align: center;background-color: #00a7d0;color: white; border: 1px solid #00a7d0;height:50px;line-height:50px;margin: auto;margin-top: 30px" onclick="toOrderHis()">历史订单</div>
+   
+   </#if> 
+   <input type="hidden" id="device_mac" name="device_mac" value="${device_mac!}"> 
+  </form>
+<!-- jQuery 2.2.3 -->
+<script src="${SPATH}/js/jquery-2.2.3.min.js"></script>
+<!-- Bootstrap 3.3.7 -->
+<script src="${SPATH}/bootstrap/js/bootstrap.min.js"></script>
+<script src="${SPATH}/js/zepto.min.js"></script>
+<script type="text/javascript" src="${SPATH}/js/jweixin-1.0.0.js"></script>
+<script src="${SPATH}/js/weui.min.js"></script>
+<script src="${SPATH}/js/example.js"></script>
+<script src="${SPATH}/layer.mobile-v2.0/layer_mobile/layer.js"></script>
+<script>
+function startWork(){
+			$.ajax({
+	            url:"${CPATH}/wash/work/startWork",
+	            data:$("#editForm").serialize(),
+	            type:"post",
+	            async: false,
+	            //dataType: 'json',
+	            success:function(data){//ajax返回的数据
+	            	console.log('data'+data);
+	           		 if(data.rtnCode==0){
+	           			layer.open({
+	           			    content: data.rtnMsg
+	           			    ,btn: '确定'
+           			    	,yes: function(index){
+           			    		$("#editForm").submit();
+	           			    }
+	           			  });
+	           	 	}else{
+	           	 	layer.open({
+           			    content: data.rtnMsg
+           			    ,btn: '确定'
+           			  });
+	           	 	}
+	            }
+	       }); 
+}
+
+function endWork(){
+	layer.open({
+	    content: '确定现在下班？'
+	    ,btn: ['是', '否']
+	    ,yes: function(index){
+	    	$.ajax({
+	            url:"${CPATH}/wash/work/endWork",
+	            data:$("#editForm").serialize(),
+	            type:"post",
+	            async: false,
+	            //dataType: 'json',
+	            success:function(data){//ajax返回的数据
+	            	console.log('data'+data);
+	           		 if(data.rtnCode==0){
+	           			layer.open({
+	           			    content: data.rtnMsg
+	           			    ,btn: '确定'
+           			    	,yes: function(index){
+           			    		$("#editForm").submit();
+	           			    }
+	           			  });
+	           		
+	           	 	}else{
+	           	 	layer.open({
+	       			    content: data.rtnMsg
+	       			    ,btn: '确定'
+	       			  });
+	           	 	}
+	            }
+	       }); 
+	    }
+	  });
+
+}
+
+function toOrder(){
+	window.location.href = "${CPATH}/wash/order/forwardWork";
+}
+function toOrderHis(){
+	window.location.href = "${CPATH}/wash/order/forwardHis";
+}
+</script>
+</body>
+</html>

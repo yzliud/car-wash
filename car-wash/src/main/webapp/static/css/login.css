@@ -1,0 +1,51 @@
+.login-bg {
+  background: url('../img/login-bg.png') no-repeat;
+  background-position: center;
+  background-size: 100%;
+}
+.login-top {
+  height: 325px;
+}
+.login-top .logo-name {
+  text-align: center;
+  font-size: 0;
+  padding-top: 110px;
+}
+.login-top .logo-name .logo {
+  display: inline-block;
+  margin-right: 20px;
+}
+.login-top .logo-name .name {
+  display: inline-block;
+  vertical-align: middle;
+}
+.login-top .website-name {
+  font-size: 48px;
+  text-align: center;
+  margin-top: 40px;
+  font-family: '黑体';
+}
+.main-login {
+  text-align: center;
+  margin-top: 30px;
+  padding: 0 40px;
+}
+.main-login .user-info {
+  margin-bottom: 30px;
+  position: relative;
+}
+.main-login .user-info .gray-x {
+  position: absolute;
+  right: 30px;
+  top: 23px;
+  width: 45px;
+  height: 45px;
+  cursor: pointer;
+}
+.main-login .login-info-btn {
+  background-color: #39a4fe;
+  color: #fff;
+  font-size: 34px;
+  text-align: center;
+  display: inline-block;
+}

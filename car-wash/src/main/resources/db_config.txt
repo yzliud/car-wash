@@ -1,0 +1,4 @@
+jdbcUrl = jdbc:mysql://localhost:3306/car_wash?characterEncoding=utf8&zeroDateTimeBehavior=convertToNull
+user = root
+password = 
+devMode = true

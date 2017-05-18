@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<!-- saved from url=(0016)https://weui.io/ -->
+<html lang="zh-cmn-Hans"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <title>追加评价</title>
+    <link rel="stylesheet" href="${SPATH}/css/weui.css">
+    <link rel="stylesheet" href="${SPATH}/css/example.css">
+    <link rel="stylesheet" href="${SPATH}/layer.mobile-v2.0/layer_mobile/need/layer.css">
+</head>
+ <body>
+ <div>
+    <div class="page__bd">
+
+        
+
+        <div class="weui-cells__title">追加评论</div>
+        <div class="weui-cells weui-cells_form">
+            <div class="weui-cell">
+                <div class="weui-cell__bd">
+                    <textarea class="weui-textarea" placeholder="请输入文本" id="evaluate" name="evaluate" rows="3"></textarea>
+                </div>
+            </div>
+        </div>
+        <div class="weui-btn-area">
+            <a class="weui-btn weui-btn_primary" href="javascript:appraise();" id="showTooltips">提交</a>
+        </div>
+    </div>
+</div>
+<input type="hidden" name="order_id" id="order_id" value="${order_id!}"/>
+<script src="${SPATH}/js/zepto.min.js"></script>
+<script type="text/javascript" src="${SPATH}/js/jweixin-1.0.0.js"></script>
+<script src="${SPATH}/js/weui.min.js"></script>
+<script src="${SPATH}/js/example.js"></script>
+<script src="${SPATH}/layer.mobile-v2.0/layer_mobile/layer.js"></script>
+<script>
+function appraise(){
+	$.ajax({
+        url:"${CPATH}/car/order/appraise",
+        data:{
+        	"evaluate": $("#evaluate").val(),
+        	"orderId": $("#order_id").val()
+        },
+        type:"post",
+        async: false,
+        //dataType: 'json',
+        success:function(data){//ajax返回的数据
+        	console.log('data'+data);
+       		 if(data.rtnCode==0){
+       			layer.open({
+       			    content: data.rtnMsg
+       			    ,btn: '确定'
+       			  });
+       			window.location.href = "${CPATH}/car/order/forward";
+       	 	}else{
+       	 	layer.open({
+   			    content: data.rtnMsg
+   			    ,btn: '确定'
+   			  });
+       	 	}
+        }
+   }); 
+}
+</script>
+
+ </body>
+</html>
