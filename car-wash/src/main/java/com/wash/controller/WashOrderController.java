@@ -1,5 +1,7 @@
 package com.wash.controller;
 
+import org.jsoup.helper.StringUtil;
+
 import com.jfinal.core.Controller;
 import com.jfinal.log.Log;
 import com.jfinal.plugin.activerecord.Db;
@@ -58,6 +60,7 @@ public class WashOrderController extends Controller{
 	public void orderHis(){
 		log.info("查询历史订单");
 		int pageNumber = getParaToInt("pageNumber");
+		String payTime = getPara("payTime");
 		String memberId = (String)getSessionAttr("memberIdSession");
 		
 		String select = " ";
@@ -72,9 +75,14 @@ public class WashOrderController extends Controller{
 				+" LEFT JOIN wash_device b ON a.device_id = b.id "
 				+" LEFT JOIN wash_member c ON a.car_person_id = c.id "
 				+" LEFT JOIN wash_ord_evaluate d ON a.id = d.id "
-				+" WHERE  a.del_flag = 0 and wash_person_id = ? "
-				+ " order by a.update_date desc ";
-		recordList = Db.paginate(pageNumber, Consts.PageSize,  select, from, memberId);
+				+" WHERE  a.del_flag = 0 and wash_person_id = ? ";
+		if(StringUtil.isBlank(payTime)){
+			from += " order by a.end_time desc  ";
+			recordList = Db.paginate(pageNumber, Consts.PageSize,  select, from, memberId);
+		}else{
+			from += " AND DATE_FORMAT(pay_time,'%Y-%m-%d')  = ? order by a.end_time desc  ";
+			recordList = Db.paginate(pageNumber, Consts.PageSize,  select, from, memberId, payTime);
+		}
 
 		renderJson(recordList);
 	}

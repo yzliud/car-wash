@@ -27,6 +27,24 @@ public abstract class BaseWashDeviceFault<M extends BaseWashDeviceFault<M>> exte
 		return get("mac");
 	}
 
+	public M setDeviceName(java.lang.String deviceName) {
+		set("device_name", deviceName);
+		return (M)this;
+	}
+
+	public java.lang.String getDeviceName() {
+		return get("device_name");
+	}
+
+	public M setDeviceAddress(java.lang.String deviceAddress) {
+		set("device_address", deviceAddress);
+		return (M)this;
+	}
+
+	public java.lang.String getDeviceAddress() {
+		return get("device_address");
+	}
+
 	public M setStatus(java.lang.String status) {
 		set("status", status);
 		return (M)this;

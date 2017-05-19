@@ -18,13 +18,13 @@ public abstract class BaseWashSetMeal<M extends BaseWashSetMeal<M>> extends Mode
 		return get("id");
 	}
 
-	public M setNAME(java.lang.String NAME) {
-		set("NAME", NAME);
+	public M setName(java.lang.String name) {
+		set("name", name);
 		return (M)this;
 	}
 
-	public java.lang.String getNAME() {
-		return get("NAME");
+	public java.lang.String getName() {
+		return get("name");
 	}
 
 	public M setSummary(java.lang.String summary) {
@@ -106,6 +106,15 @@ public abstract class BaseWashSetMeal<M extends BaseWashSetMeal<M>> extends Mode
 
 	public java.lang.String getUpdateBy() {
 		return get("update_by");
+	}
+
+	public M setDelFlag(java.lang.String delFlag) {
+		set("del_flag", delFlag);
+		return (M)this;
+	}
+
+	public java.lang.String getDelFlag() {
+		return get("del_flag");
 	}
 
 }

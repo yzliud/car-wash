@@ -126,4 +126,13 @@ public abstract class BaseWashOrdSetMeal<M extends BaseWashOrdSetMeal<M>> extend
 		return get("update_by");
 	}
 
+	public M setDelFlag(java.lang.String delFlag) {
+		set("del_flag", delFlag);
+		return (M)this;
+	}
+
+	public java.lang.String getDelFlag() {
+		return get("del_flag");
+	}
+
 }

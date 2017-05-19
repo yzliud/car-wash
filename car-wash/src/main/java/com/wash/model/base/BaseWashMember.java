@@ -63,6 +63,15 @@ public abstract class BaseWashMember<M extends BaseWashMember<M>> extends Model<
 		return get("name");
 	}
 
+	public M setStatus(java.lang.String status) {
+		set("status", status);
+		return (M)this;
+	}
+
+	public java.lang.String getStatus() {
+		return get("status");
+	}
+
 	public M setUserType(java.lang.String userType) {
 		set("user_type", userType);
 		return (M)this;
