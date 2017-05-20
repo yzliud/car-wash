@@ -1,5 +1,6 @@
 package com.wash.interceptor;
 
+import java.io.IOException;
 import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
@@ -48,6 +49,18 @@ public class WebChatOauthInterceptorByIntro implements Interceptor {
 		}else{
 			if(userInfo != null && userInfo.getOpenId() != null){
 				saveOrUpdate(userInfo,controller);
+			}
+			//判断是否是黑名单用户
+			WashMember wm = WashMember.dao.findFirst("select * from wash_member WHERE open_id = ? ", openId);
+			if(wm != null && wm.getStatus().equals("1")){
+				try {
+					StringBuffer url = request.getRequestURL();  
+					String tempContextUrl = url.delete(url.length() - request.getRequestURI().length(), url.length()).append(request.getServletContext().getContextPath()).toString(); 
+					controller.getResponse().sendRedirect(tempContextUrl+"/error/black");
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 			inv.invoke();
 		}

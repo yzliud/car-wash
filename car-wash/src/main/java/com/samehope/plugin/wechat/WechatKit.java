@@ -38,7 +38,9 @@ public class WechatKit extends Controller{
         jsonObj.put("device_mac", request.getParameter("device_mac"));
         log.info(jsonObj.toJSONString());
         String getWeiXinCodeUrl = WeChatUtils.getCallBackCodeURL(wechatConfig.getAppid());
-        String backUri = "http://"+request.getServerName()+request.getContextPath()+"/wechat/oauth2/toOauth2Page?jsonStr="+jsonObj.toJSONString();
+        StringBuffer url = request.getRequestURL(); 
+        String tempContextUrl = url.delete(url.length() - request.getRequestURI().length(), url.length()).append(request.getServletContext().getContextPath()).toString(); 
+        String backUri = tempContextUrl+"/wechat/oauth2/toOauth2Page?jsonStr="+jsonObj.toJSONString();
         getWeiXinCodeUrl = getWeiXinCodeUrl.replace("REDIRECT_URI", backUri);
         log.info("getWeiXinCodeUrl=="+getWeiXinCodeUrl);
         try {
@@ -62,7 +64,10 @@ public class WechatKit extends Controller{
 		String[] splitPath = servletPath.split("\\/");
 		String controllerKey = "/"+splitPath[1]+"/"+splitPath[2];
 		String methodName = map.get("methodName");//splitPath[3];
-		String toJspayUrl = "http://"+request.getServerName() + request.getContextPath() + "/wechat/pay/toJspayOuth2";
+		StringBuffer url = request.getRequestURL(); 
+	    String tempContextUrl = url.delete(url.length() - request.getRequestURI().length(), url.length()).append(request.getServletContext().getContextPath()).toString();
+	        
+		String toJspayUrl = tempContextUrl + "/wechat/pay/toJspayOuth2";
         log.info("toJspayUrl=="+toJspayUrl+"?controllerKey="+controllerKey+"&methodName="+methodName+"&orderId="+map.get("orderId")+"&payMoney="+map.get("payMoney")
         +"&appId="+wechatConfig.getAppid()+"&secret="+wechatConfig.getSecret()+"&partner="+wechatConfig.getPartner()+"&partnerkey="+wechatConfig.getPartnerkey()
         +"&serverName="+request.getServerName()+"&openid="+wechatConfig.getOpenid());
