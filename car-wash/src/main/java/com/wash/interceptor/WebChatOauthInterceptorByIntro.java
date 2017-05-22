@@ -30,12 +30,12 @@ public class WebChatOauthInterceptorByIntro implements Interceptor {
 		log.info("device_mac="+device_mac);
 		
 		/***********************/
-		SNSUserInfo ui = new SNSUserInfo();
-		ui.setOpenId("ofUWXwwH318V2HCwZJLPQJ0dKFZI");
-		ui.setNickname("liu");
-		ui.setHeadImgUrl("http://wx.qlogo.cn/mmopen/rQx3vkJTWe6rYqZjzWibWuMvkpX7KXhYMb92MtShHMzeCCict7hGGQ49A0VL4q97UibicYro4Bko54AIdsxkRfAgZ62LgyzBAPuj/0");
-		controller.setSessionAttr("openIdSession", "ofUWXwwH318V2HCwZJLPQJ0dKFZI");
-		controller.setSessionAttr("openMemberSession", ui);
+//		SNSUserInfo ui = new SNSUserInfo();
+//		ui.setOpenId("ofUWXwwH318V2HCwZJLPQJ0dKFZI");
+//		ui.setNickname("liu");
+//		ui.setHeadImgUrl("http://wx.qlogo.cn/mmopen/rQx3vkJTWe6rYqZjzWibWuMvkpX7KXhYMb92MtShHMzeCCict7hGGQ49A0VL4q97UibicYro4Bko54AIdsxkRfAgZ62LgyzBAPuj/0");
+//		controller.setSessionAttr("openIdSession", "ofUWXwwH318V2HCwZJLPQJ0dKFZI");
+//		controller.setSessionAttr("openMemberSession", ui);
 		/***********************/
 		
 		String openId = (String)controller.getSessionAttr("openIdSession");
@@ -54,6 +54,7 @@ public class WebChatOauthInterceptorByIntro implements Interceptor {
 			WashMember wm = WashMember.dao.findFirst("select * from wash_member WHERE open_id = ? ", openId);
 			if(wm != null && wm.getStatus().equals("1")){
 				try {
+					log.info("************WashMember*********" + wm.toJson());
 					StringBuffer url = request.getRequestURL();  
 					String tempContextUrl = url.delete(url.length() - request.getRequestURI().length(), url.length()).append(request.getServletContext().getContextPath()).toString(); 
 					controller.getResponse().sendRedirect(tempContextUrl+"/error/black");
@@ -61,8 +62,9 @@ public class WebChatOauthInterceptorByIntro implements Interceptor {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+			}else{
+				inv.invoke();
 			}
-			inv.invoke();
 		}
 	}
 	
@@ -86,6 +88,7 @@ public class WebChatOauthInterceptorByIntro implements Interceptor {
 				washMember.setId(UuidUtils.getUuid());
 				washMember.setOpenId(openId);
 		    	washMember.setNickName(nickname);
+		    	washMember.setStatus("0");
 		    	washMember.setSex(sex);
 		    	washMember.setCountry(country);
 		    	washMember.setProvince(province);

@@ -128,10 +128,7 @@
 		                    		"<label class='weui-form-preview-label'>状态</label>"+
 		                    		"<span class='weui-form-preview-value' >"+datalist[i].order_status_value+"</span>"+
 		                		"</p>"+
-		                		"<p>"+
-		                    		"<label class='weui-form-preview-label'>洗车工</label>"+
-		                    		"<span class='weui-form-preview-value' >"+datalist[i].nick_name+"</span>"+
-		                		"</p>"+
+		                		
 		                		"<p>"+
 		                    		"<label class='weui-form-preview-label'>设备</label>"+
 		                    		"<span class='weui-form-preview-value' >"+datalist[i].device_name+"</span>"+
@@ -146,6 +143,13 @@
 			                    		"<label class='weui-form-preview-label'>下单时间</label>"+
 			                    		"<span class='weui-form-preview-value'>"+datalist[i].order_time+"</span>"+
 			                		"</p>";
+		                		}
+								if( datalist[i].order_status=="2" || datalist[i].order_status=="3" || datalist[i].order_status=="9"){
+		                			neirong = neirong +
+		                			"<p>"+
+		                    		"<label class='weui-form-preview-label'>洗车工</label>"+
+		                    		"<span class='weui-form-preview-value' >"+datalist[i].nick_name+"</span>"+
+		                			"</p>";
 		                		}
 		                		if(datalist[i].order_status=="1" || datalist[i].order_status=="2" || datalist[i].order_status=="3" || datalist[i].order_status=="9"){
 		                			neirong = neirong +
@@ -185,8 +189,8 @@
 						neirong = neirong +"</div>";
 						if(datalist[i].order_status=="0"){
 	            			neirong = neirong +
-	            			"<div class='weui-form-preview-ft' >"+
-	            			"<button class='weui-form-preview-btn weui-form-preview-btn-primary' onclick='del(&quot;"+datalist[i].id+"&quot;)'>删除</button>"+
+	            			"<div class='weui-form-preview-ft' style='height: 50px;'>"+
+	            			"<button class='weui-form-preview-btn weui-form-preview-btn-primary' nclick='del(&quot;"+datalist[i].id+"&quot;)'>删除</button>"+
 	            			"<button class='weui-form-preview-btn weui-form-preview-btn-primary' onclick='topay(&quot;"+datalist[i].id+"&quot;,&quot;"+datalist[i].device_mac+"&quot;)'>支付</button>"+
 	            		"</div>";
 	            		}

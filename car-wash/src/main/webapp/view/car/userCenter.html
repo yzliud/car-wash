@@ -3,9 +3,9 @@
 <html lang="zh-cmn-Hans"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     
     <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
-    <title>WeUI</title>
-    <link rel="stylesheet" href="/static/css/weui.css">
-    <link rel="stylesheet" href="/static/css/example.css">
+    <title>个人中心</title>
+    <link rel="stylesheet" href="${SPATH}/css/weui.css">
+    <link rel="stylesheet" href="${SPATH}/css/example.css">
 </head>
  <body>
  <div>
@@ -14,35 +14,61 @@
         <div class="weui-cells">
             <div class="weui-cell">
                 <div class="weui-cell__hd" style="position: relative;margin-right: 10px;">
-                    <img src="http://wx.qlogo.cn/mmopen/sUe38nrWAFkgSSNCOn1bWq0h2G9ShuIVhQ9q1zeARKjhaISkhVUP3TqD3N2XBNofbzhc0e57mayMafTIkdbG2jPEWHDhHGIy/0" style="width: 50px;display: block"/>
+                    <img src="${washMember.img!}" style="width: 50px;display: block"/>
                 </div>
                 <div class="weui-cell__bd">
-                    <p>刘丹</p>
+                    <p>${washMember.nickName!}</p>
                 </div>
             </div>
 		</div>
 		<div class="weui-cells">
-            <div class="weui-cell weui-cell_access">
+            <div class="weui-cell weui-cell_access"  onclick="javascript:forwardUserInfo();">
+            	<div class="weui-cell__hd" style="height:22px">
+					<img src="${SPATH}/img/cp.png" style="width: 20px;display: block"/>
+                </div>
                 <div class="weui-cell__bd">
-					<span class="weui-badge-new" style="margin-left: 5px;"> <img src="./img/cp.png" style="width: 20px;display: block"/></span>
-                    <span style="vertical-align: middle">个人车牌</span>
+                    <span style="vertical-align: middle">个人车辆</span>
                 </div>
                 <div class="weui-cell__ft"></div>
             </div>
-            <div class="weui-cell weui-cell_access">
+            <div class="weui-cell weui-cell_access"  onclick="javascript:forwardOrderHis();">
+            	<div class="weui-cell__hd" style="height:22px">
+            		<img src="${SPATH}/img/dd.png" style="width: 20px;display: block"/>
+            	</div>
                 <div class="weui-cell__bd">
-					<span class="weui-badge-new" style="margin-left: 5px;"> <img src="./img/dd.png" style="width: 20px;display: block"/></span>
                     <span style="vertical-align: middle">订单中心</span>
                 </div>
                 <div class="weui-cell__ft"></div>
             </div>
+            <#if washMember.userType == '1'> 
+             <div class="weui-cell weui-cell_access"  onclick="javascript:forwardWashOrder();">
+            	<div class="weui-cell__hd" style="height:22px">
+            		<img src="${SPATH}/img/xc.png" style="width: 20px;display: block"/>
+            	</div>
+                <div class="weui-cell__bd">
+                    <span style="vertical-align: middle">洗车订单</span>
+                </div>
+                <div class="weui-cell__ft"></div>
+            </div>
+            </#if>
         </div>
     </div>
 </div>
 
-<script src="/static/js/zepto.min.js"></script>
-<script type="text/javascript" src="/static/js/jweixin-1.0.0.js"></script>
-<script src="/static/js/weui.min.js"></script>
-<script src="/static/js/example.js"></script>
+<script src="${SPATH}/js/zepto.min.js"></script>
+<script type="text/javascript" src="${SPATH}/js/jweixin-1.0.0.js"></script>
+<script src="${SPATH}/js/weui.min.js"></script>
+<script src="${SPATH}/js/example.js"></script>
+<script>
+function forwardUserInfo(){
+	window.location.href = "${CPATH}/car/member/forwardUserInfo";
+}
+function forwardOrderHis(){
+	window.location.href = "${CPATH}/car/order/forward";
+}
+function forwardWashOrder(){
+	window.location.href = "${CPATH}/wash/order/forwardHis";
+}
+</script>
  </body>
 </html>

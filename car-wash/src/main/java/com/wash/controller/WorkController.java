@@ -101,7 +101,7 @@ public class WorkController extends Controller {
 			
 			render("work.html");
 		}else{
-			forwardAction("/car/order/forwardOrder?device_mac="+mac);
+			forwardAction("/car/order/forwardOrder");
 		}
 	}
 	

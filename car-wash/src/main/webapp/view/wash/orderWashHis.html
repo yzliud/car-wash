@@ -82,7 +82,7 @@ function endWash(id) {
 				success: function(data) {
 					count = count + 1;
 					var datalist = data.list;
-					if(datalist.length == 0){
+					if(datalist.length == 0 && count == 2){
 						$("#space").empty();
 					}
  					mui('#pullrefresh').pullRefresh().endPullupToRefresh((datalist.length == 0)); //参数为true代表没有更多数据了。

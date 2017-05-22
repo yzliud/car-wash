@@ -13,6 +13,8 @@
   <link rel="stylesheet" href="${SPATH}/dist/css/AdminLTE.min.css">
   <link rel="stylesheet" href="${SPATH}/css/weui.css">
     <link rel="stylesheet" href="${SPATH}/css/example.css">
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
   <!-- AdminLTE Skins. Choose a skin from the css/skins
        folder instead of downloading all of them to reduce the load. -->
 
@@ -39,27 +41,37 @@
               <img class="img-circle" src="${washMember.img!}" alt="User Avatar">
             </div>
 			 <div class="box-footer">
-			 <div class="row" style="text-align:center;font-size:30px">
-			 ${washSetMealData.name!}
-			 </div>
-			  <div class="row" style="text-align:center;font-size:10px">
-			 ${washSetMealData.summary!}
-			 </div>
-			  <div class="row" style="text-align:center;font-size:20px">
-			      总计：${washSetMealData.salePrice!}元
-			 </div>
+				 
+				
 			 <div>
 			 </div>
           </div>
 			
 		</div>
    </div>
-
+  </div>
+<div class="row">
+				 	 <div class="col-md-3 col-sm-6 col-xs-12">
+			          <div class="info-box bg-yellow">
+			            <span class="info-box-icon"><i class="fa fa-shopping-cart"></i></span>
+			
+			            <div class="info-box-content">
+			              <span class="info-box-text"> ${washSetMealData.name!}</span>
+			              <span class="info-box-number"> 总计：${washSetMealData.salePrice!}元</span>
+			
+			
+			                  <span class="progress-description">
+			                    ${washSetMealData.summary!}
+			                  </span>
+			            </div>
+			          </div>
+			        </div>
+				 </div>
          <div style="width: 100%;position: fixed; bottom: 0px;font-weight: bold;text-align: center;background-color: #00a7d0;color: white; border: 1px solid #00a7d0;height:50px;line-height:50px;margin: auto;margin-top: 30px" onclick="topay()">支付</div>
 
  <input type="hidden" id="set_meal_id" name="set_meal_id" value="${washSetMealData.id!}"> 
 <input type="hidden" id="device_mac" name="device_mac" value="${device_mac!}">
-</div>
+
 </div>
 </form>
 <!-- jQuery 2.2.3 -->

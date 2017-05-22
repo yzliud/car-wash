@@ -6,6 +6,10 @@ import java.sql.Driver;
 import java.sql.DriverManager;
 import java.util.Enumeration;
 
+import cn.dreampie.quartz.QuartzKey;
+import cn.dreampie.quartz.QuartzPlugin;
+import cn.dreampie.quartz.job.QuartzCronJob;
+
 import com.jfinal.config.Constants;
 import com.jfinal.config.Handlers;
 import com.jfinal.config.Interceptors;
@@ -28,6 +32,7 @@ import com.wash.controller.WashOrderController;
 import com.wash.controller.WorkController;
 import com.wash.handler.SysHandler;
 import com.wash.interceptor.WebChatOauthInterceptorByIntro;
+import com.wash.job.OrderJob;
 import com.wash.model._MappingKit;
 import com.wash.websocket.DeviceServer;
 
@@ -85,6 +90,9 @@ public class WashConfig extends JFinalConfig {
 		// 所有映射在 MappingKit 中自动化搞定
 		_MappingKit.mapping(arp);
 		me.add(arp);
+		
+		QuartzPlugin quartz = new QuartzPlugin();
+		me.add(quartz);
 	}
 	
 	public static DruidPlugin createDruidPlugin() {
@@ -120,6 +128,8 @@ public class WashConfig extends JFinalConfig {
 				}
 			}
 		}).start();
+		
+		new QuartzCronJob(new QuartzKey(1, "test", "test"), "0 */10 * * * ?", OrderJob.class).start();
 		
 		log.info("System Start~!");
 	}

@@ -56,8 +56,17 @@ public class CarController extends Controller{
 	 */
 	public void forwardUserInfo(){
 		WashMember washMember = getSessionAttr("memberDataSession");
-		setSessionAttr("washMember", washMember);
+		setAttr("washMember", washMember);
 		render("userInfo.html");
+	}
+	
+	/**
+	 * 跳转个人中心
+	 */
+	public void forwardUserCenter(){
+		WashMember washMember = getSessionAttr("memberDataSession");
+		setAttr("washMember", washMember);
+		render("userCenter.html");
 	}
 	
 	/**

@@ -3,10 +3,11 @@
 <html lang="zh-cmn-Hans"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     
     <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
-    <title>服务评价</title>
+    <title>个人信息</title>
     <link rel="stylesheet" href="${SPATH}/css/weui.css">
     <link rel="stylesheet" href="${SPATH}/css/example.css">
     <link rel="stylesheet" href="${SPATH}/layer.mobile-v2.0/layer_mobile/need/layer.css">
+    <link rel="stylesheet" type="text/css" href="${SPATH}/carnumber/css/jquery.css"/>
 </head>
  <body>
  <div>
@@ -19,7 +20,7 @@
                 	<label class="weui-label">车牌号</label>
                 </div>
                 <div class="weui-cell__bd">
-                    <input class="weui-input" id="car_number" name="car_number" value="" type="text" placeholder="请输入车牌"/>
+                    <input class="weui-input" id="car_name" name="car_name" value="${washMember.carNumber}" type="text" placeholder="请输入车牌号"/>
                 </div>
             </div>
             <div class="weui-cell">
@@ -27,13 +28,12 @@
                     <label class="weui-label">车辆型号</label>
                 </div>
                 <div class="weui-cell__bd">
-                    <input class="weui-input" id="car_model" name="car_model" value="" type="text" placeholder="请输入车辆型号"/>
+                    <input class="weui-input" id="car_model" name="car_model" value="${washMember.carModel}" type="text" placeholder="请输入车辆型号"/>
                 </div>
             </div>
             
         </div>
         
-        <div class="weui-cells__tips">底部说明文字底部说明文字</div>
         <div class="weui-btn-area">
             <a class="weui-btn weui-btn_primary" href="javascript:update();" id="showTooltips">提交</a>
         </div>
@@ -44,32 +44,65 @@
 <script src="${SPATH}/js/weui.min.js"></script>
 <script src="${SPATH}/js/example.js"></script>
 <script src="${SPATH}/layer.mobile-v2.0/layer_mobile/layer.js"></script>
+<script type="text/javascript" src="${SPATH}/carnumber/js/jquery.min.js"></script>
+<!--
+如果您要调用的高版本jQuery，请引用下面jQuery版本迁移辅助插件
+<script src="http://www.jq22.com/jquery/jquery-migrate-1.2.1.min.js"></script>
+-->
+<script src="${SPATH}/carnumber/js/jquery.autocomplete.js" type="text/javascript"></script>
+<script src="${SPATH}/carnumber/js/data.js" type="text/javascript"></script>
+<script src="${SPATH}/carnumber/js/autocomplete.js" type="text/javascript"></script>
+<script src="${SPATH}/carnumber/js/index.js" type="text/javascript"></script>
 <script>
 function update(){
-	$.ajax({
-        url:"${CPATH}/car/member/editUserInfo",
-        data:{
-        	"car_number": $("#car_number").val(),
-        	"car_model": $("#car_model").val()
-        },
-        type:"post",
-        async: false,
-        dataType: 'json',
-        success:function(data){//ajax返回的数据
-        	console.log('data'+data);
-       		 if(data.rtnCode==0){
-       			layer.open({
-       			    content: data.rtnMsg
-       			    ,btn: '确定'
-       			  });
-       	 	}else{
-       	 	layer.open({
-   			    content: data.rtnMsg
-   			    ,btn: '确定'
-   			  });
-       	 	}
-        }
-   }); 
+	var car_name = $("#car_name").val().toUpperCase();
+	if(car_name == "输入车牌" || car_name == "") {
+		layer.open({
+			content: '请输入车牌',
+			skin: 'msg',
+			time: 2
+		});
+	} else if(check_car_name(car_name) == false) {
+		layer.open({
+			content: '请输入正确车牌',
+			skin: 'msg',
+			time: 2
+		});
+	} else {
+		$.ajax({
+	        url:"${CPATH}/car/member/editUserInfo",
+	        data:{
+	        	"car_number": $("#car_name").val(),
+	        	"car_model": $("#car_model").val()
+	        },
+	        type:"post",
+	        async: false,
+	        dataType: 'json',
+	        success:function(data){//ajax返回的数据
+	        	console.log('data'+data);
+	       		 if(data.rtnCode==0){
+	       			layer.open({
+	       			    content: data.rtnMsg
+	       			    ,btn: '确定'
+	       			  });
+	       	 	}else{
+	       	 	layer.open({
+	   			    content: data.rtnMsg
+	   			    ,btn: '确定'
+	   			  });
+	       	 	}
+	        }
+	   }); 
+	}
+}
+
+function check_car_name(car_name) {
+	var re = /^[\u4e00-\u9fa5]{1}[A-Z]{1}[A-Z_0-9]{5}$/;
+	if(car_name.search(re) == -1) {
+		return false;
+	} else {
+		return true;
+	}
 }
 </script>
 
