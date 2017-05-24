@@ -3,7 +3,7 @@
 <html lang="zh-cmn-Hans"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     
     <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
-    <title>个人信息</title>
+    <title>车辆绑定</title>
     <link rel="stylesheet" href="${SPATH}/css/weui.css">
     <link rel="stylesheet" href="${SPATH}/css/example.css">
     <link rel="stylesheet" href="${SPATH}/layer.mobile-v2.0/layer_mobile/need/layer.css">
@@ -20,7 +20,7 @@
                 	<label class="weui-label">车牌号</label>
                 </div>
                 <div class="weui-cell__bd">
-                    <input class="weui-input" id="car_name" name="car_name" value="${washMember.carNumber}" type="text" placeholder="请输入车牌号"/>
+                    <input class="weui-input" id="car_name" name="car_name" value="${washMember.carNumber!}" type="text" placeholder="请输入车牌号"/>
                 </div>
             </div>
             <div class="weui-cell">
@@ -28,7 +28,7 @@
                     <label class="weui-label">车辆型号</label>
                 </div>
                 <div class="weui-cell__bd">
-                    <input class="weui-input" id="car_model" name="car_model" value="${washMember.carModel}" type="text" placeholder="请输入车辆型号"/>
+                    <input class="weui-input" id="car_model" name="car_model" value="${washMember.carModel!}" type="text" placeholder="请输入车辆型号"/>
                 </div>
             </div>
             

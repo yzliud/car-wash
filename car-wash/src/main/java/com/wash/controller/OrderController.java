@@ -22,6 +22,7 @@ import com.samehope.plugin.wechat.WechatKit;
 import com.samehope.plugin.wechat.jspay.WechatPay;
 import com.samehope.plugin.wechat.model.WechatConfig;
 import com.wash.Consts;
+import com.wash.model.WashCouponDetail;
 import com.wash.model.WashDevice;
 import com.wash.model.WashMember;
 import com.wash.model.WashOrdEvaluate;
@@ -68,10 +69,20 @@ public class OrderController extends Controller{
 		//设备信息
 		WashDevice washDevice = WashDevice.dao.findFirst("select * from wash_device WHERE mac = ? ", deviceMac);
 		String deviceId = washDevice.getId();
-		BigDecimal realFee = wsm.getSalePrice();
 		BigDecimal totalFee = wsm.getSalePrice();
 		String memberId = (String)getSessionAttr("memberIdSession");
 		String openId = (String)getSessionAttr("openIdSession");
+		
+		//优惠卷
+		WashCouponDetail washCouponDetail = WashCouponDetail.dao.findFirst(
+				"select * from wash_coupon_detail where member_id = ? and status = 1 and now() between effective_time and failure_time"
+				, memberId); 
+		BigDecimal discountFee = BigDecimal.valueOf(0);
+		if(washCouponDetail != null){
+			discountFee = washCouponDetail.getDiscountAmount();
+		}
+		BigDecimal realFee = totalFee.subtract(discountFee);
+		
 		
 		Date date = new Date();
 		//订单编号
@@ -93,17 +104,23 @@ public class OrderController extends Controller{
 		woo.setPayMode(Consts.payMode_0);
 		woo.setSetMealId(setMealId);
 		woo.setTotalFee(totalFee);
-		woo.setDiscountFee(new BigDecimal(0));
+		woo.setDiscountFee(discountFee);
 		woo.setRealFee(realFee);
 		woo.setWashFee(new BigDecimal(0));
 		woo.setCreateDate(date);
 		woo.setUpdateDate(date);
 		woo.setDelFlag("0");
 		woo.save();
+		
+		//更新优惠价使用信息
+		if(washCouponDetail != null){
+			washCouponDetail.setOrderNo(orderNo);
+			washCouponDetail.update();
+		}
 		//发起支付
 		Map<String,String> map = new HashMap<String,String>();
 		map.put("orderId", orderNo);
-		map.put("payMoney", realFee+"");
+		map.put("payMoney", realFee.doubleValue()+"");
 		map.put("controllerKey", "/car/order");
 		map.put("methodName", "forward");
 		WechatConfig wechatConfig = WechatConfig.getWechatConfig(PropKit.use("wx_config.properties").get("appid")
@@ -167,6 +184,9 @@ public class OrderController extends Controller{
 					woo.setPaySerialNumber(transactionId);
 					woo.setUpdateDate(date);
 					rtnFlag = woo.update();
+					
+					//更新优惠卷使用信息
+					Db.update("update wash_coupon_detail set status = 2, update_time = now() where order_no = ? ", orderId);
 				}
 				if(rtnFlag){
 					log.info("向微信服务器告知支付成功!!!!!!");
@@ -199,7 +219,7 @@ public class OrderController extends Controller{
 				+" LEFT JOIN wash_device b ON a.device_id = b.id"
 				+" LEFT JOIN wash_member c ON a.wash_person_id = c.id"
 				+" LEFT JOIN wash_ord_evaluate d ON a.id = d.id"
-				+" WHERE  a.del_flag = 0 and car_person_id = ? order by a.update_date desc ";
+				+" WHERE  a.del_flag = 0 and car_person_id = ? and a.order_status != 0 order by a.update_date desc ";
 		recordList = Db.paginate(pageNumber, Consts.PageSize, select, from, memberId);
 		
 		renderJson(recordList);

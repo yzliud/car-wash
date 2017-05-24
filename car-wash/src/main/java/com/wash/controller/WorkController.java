@@ -1,6 +1,5 @@
 package com.wash.controller;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 import org.jsoup.helper.StringUtil;
@@ -79,20 +78,36 @@ public class WorkController extends Controller {
 			setAttr("jsonResult", jsonResult);
 			
 			//最近的上班记录
-			List<Record> workRecordList = Db.find("select a.*, b.name device_name from wash_work_device_record a,wash_device b where a.wash_person_id = ? and a.wash_device_id = b.id  order by a.update_date desc LIMIT 0, 3", memberId);
-			setAttr("workRecordList", workRecordList);
+//			List<Record> workRecordList = Db.find("select a.*, b.name device_name from wash_work_device_record a,wash_device b where a.wash_person_id = ? and a.wash_device_id = b.id  order by a.update_date desc LIMIT 0, 3", memberId);
+//			setAttr("workRecordList", workRecordList);
 			
-			//昨天
-			BigDecimal yesterdayFee = Db.queryBigDecimal("select IFNULL(SUM(real_fee),0) from wash_ord_order where wash_person_id = ? and TO_DAYS(NOW())-TO_DAYS(end_time) <= 1 and order_status in(3,9) ", memberId );
-			setAttr("yesterdayFee", yesterdayFee);
+			//昨天订单数
+			long yesterdayCount = Db.queryLong("select count(1) from wash_ord_order where wash_person_id = ? and date_format(end_time,'%Y-%m-%d')=date_format(DATE_SUB(curdate(), INTERVAL 1 day),'%Y-%m-%d') and order_status in(3,9) ", memberId );
+			setAttr("yesterdayCount", yesterdayCount);
 			
-			//当月
-			BigDecimal sameMonthFee = Db.queryBigDecimal("select IFNULL(SUM(real_fee),0) from wash_ord_order where wash_person_id = ? and DATE_FORMAT(end_time,'%Y-%m')=DATE_FORMAT(NOW(),'%Y-%m') and order_status in(3,9) ", memberId );
-			setAttr("sameMonthFee", sameMonthFee);
+			//当天
+			long nowCount = Db.queryLong("select count(1) from wash_ord_order where wash_person_id = ? and DATE_FORMAT(end_time,'%Y-%m-%d')=DATE_FORMAT(NOW(),'%Y-%m-%d') and order_status in(3,9) ", memberId );
+			setAttr("nowCount", nowCount);
 			
-			//上个月
-			BigDecimal lastMonthFee = Db.queryBigDecimal("select IFNULL(SUM(real_fee),0) from wash_ord_order where wash_person_id = ? and date_format(end_time,'%Y-%m')=date_format(DATE_SUB(curdate(), INTERVAL 1 MONTH),'%Y-%m') and order_status in(3,9) ", memberId );
-			setAttr("lastMonthFee", lastMonthFee);
+			//近7天
+			long lastWeekCount = Db.queryLong("select count(1) from wash_ord_order where wash_person_id = ? and date_format(DATE_SUB(NOW(), INTERVAL 7 DAY),'%Y-%m-%d') <= DATE_FORMAT(end_time,'%Y-%m-%d') and order_status in(3,9) ", memberId );
+			setAttr("lastWeekCount", lastWeekCount);
+			
+			//排队
+			long waitCount = Db.queryLong("select count(1) from wash_ord_order where device_mac = ? and DATE_FORMAT(pay_time,'%Y-%m-%d')=DATE_FORMAT(NOW(),'%Y-%m-%d') and order_status in(1,2) ", mac );
+			setAttr("waitCount", waitCount);
+			
+			//好评数
+			long highPraiseCount = Db.queryLong("SELECT COUNT(1) FROM wash_ord_evaluate a ,wash_ord_order b WHERE a.id = b.id AND a.flag = 0 ");
+			setAttr("highPraiseCount", highPraiseCount);
+			
+			//差评数
+			long badPraiseCount = Db.queryLong("SELECT COUNT(1) FROM wash_ord_evaluate a ,wash_ord_order b WHERE a.id = b.id AND a.flag = 2 ");
+			setAttr("badPraiseCount", badPraiseCount);
+			
+			//排队订单
+			List<Record> waitList = Db.find("select * from wash_ord_order where device_mac = ? and DATE_FORMAT(pay_time,'%Y-%m-%d')=DATE_FORMAT(NOW(),'%Y-%m-%d') and order_status in(1,2) order by update_date desc limit 0,3 ", mac);
+			setAttr("waitList", waitList);
 			
 			//个人信息
 			setAttr("washMember", (WashMember)getSessionAttr("memberDataSession"));

@@ -47,7 +47,9 @@ public class WashOrderController extends Controller{
 				+" LEFT JOIN wash_member c ON a.car_person_id = c.id "
 				+" LEFT JOIN wash_ord_evaluate d ON a.id = d.id "
 				+" WHERE  a.del_flag = 0 and a.device_id = ? "
-				+ " and a.order_status in(1,2) order by pay_time ";
+				+ " and a.order_status in(1,2)"
+				+ " and DATE_FORMAT(pay_time,'%Y-%m-%d')=DATE_FORMAT(NOW(),'%Y-%m-%d')"
+				+ " order by a.update_date desc ";
 		
 		recordList = Db.paginate(pageNumber, Consts.PageSize,  select, from, deviceId);
 
@@ -62,6 +64,7 @@ public class WashOrderController extends Controller{
 		int pageNumber = getParaToInt("pageNumber");
 		String payTime = getPara("payTime");
 		String memberId = (String)getSessionAttr("memberIdSession");
+		String type = getPara("type");
 		
 		String select = " ";
 		String from = " ";
@@ -76,6 +79,15 @@ public class WashOrderController extends Controller{
 				+" LEFT JOIN wash_member c ON a.car_person_id = c.id "
 				+" LEFT JOIN wash_ord_evaluate d ON a.id = d.id "
 				+" WHERE  a.del_flag = 0 and wash_person_id = ? ";
+		if(!StringUtil.isBlank(type)){
+			if(type.equals("1")){//昨日订单
+				from += " and date_format(end_time,'%Y-%m-%d')=date_format(DATE_SUB(NOW(), INTERVAL 1 day),'%Y-%m-%d') and order_status in(3,9) ";
+			}else if(type.equals("2")){//今日订单
+				from += " and DATE_FORMAT(end_time,'%Y-%m-%d')=DATE_FORMAT(NOW(),'%Y-%m-%d') and order_status in(3,9) ";
+			}else if(type.equals("3")){//一周订单
+				from += " and date_format(DATE_SUB(NOW(), INTERVAL 7 DAY),'%Y-%m-%d') <= DATE_FORMAT(end_time,'%Y-%m-%d') and order_status in(3,9) ";
+			}
+		}
 		if(StringUtil.isBlank(payTime)){
 			from += " order by a.end_time desc  ";
 			recordList = Db.paginate(pageNumber, Consts.PageSize,  select, from, memberId);
@@ -88,12 +100,16 @@ public class WashOrderController extends Controller{
 	}
 	
 	public void forwardWork(){
-		
 		render("orderWork.html");
 	}
 	
 	public void forwardHis(){
-		
 		render("orderWashHis.html");
+	}
+	
+	public void forwardTypeHis(){
+		String type = getPara("type");
+		setAttr("type",type);
+		render("orderTypeHis.html");
 	}
 }

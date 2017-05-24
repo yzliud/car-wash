@@ -24,96 +24,126 @@
   <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
   <![endif]-->
 </head>
-<body class="hold-transition  sidebar-mini">
+<body class="hold-transition  sidebar-mini" >
 <form id="editForm" method="post" action="${CPATH}/wash/work/forwardWork">
-<div class="wrapper">
- <div class="row">
-       <div class="col-md-4">
-          <!-- Widget: user widget style 1 -->
-          <div class="box box-widget widget-user">
-            <!-- Add the bg color to the header using any of the bg-* classes -->
-            <div class="widget-user-header bg-aqua-active">
-              <h3 class="widget-user-username">${washMember.nickName}</h3>
-              <h5 class="widget-user-desc">洗车服务员</h5>
-            </div>
-            <div class="widget-user-image">
-              <img class="img-circle" src="${washMember.img}" alt="User Avatar">
-            </div>
-            <div class="box-footer">
-              <div class="row">
-                <div class="col-xs-4 border-right">
-                  <div class="description-block">
-                    <h5 class="description-header">${yesterdayFee}</h5>
-                    <span class="description-text">昨日金额</span>
-                  </div>
-                  <!-- /.description-block -->
-                </div>
-                <!-- /.col -->
-                <div class="col-xs-4 border-right">
-                  <div class="description-block">
-                    <h5 class="description-header">${sameMonthFee}</h5>
-                    <span class="description-text">当月金额</span>
-                  </div>
-                  <!-- /.description-block -->
-                </div>
-                <!-- /.col -->
-                <div class="col-xs-4">
-                  <div class="description-block">
-                    <h5 class="description-header">${lastMonthFee}</h5>
-                    <span class="description-text">上月金额</span>
-                  </div>
-                  <!-- /.description-block -->
-                </div>
-                <!-- /.col -->
-              </div>
-              <!-- /.row -->
-            </div>
-          </div>
-			<#if workRecordList??> 
-              <div style="background-color:#ffffff">
-              <#list workRecordList as x>
-               <div class="row" >
-                <div class="col-xs-2 border-right">
-                  <div class="description-block">
-                    <span class="description-text">${x.device_name!}</span>
-                  </div>
-                  <!-- /.description-block -->
-                </div>
-                <!-- /.col -->
-                <div class="col-xs-5 border-right">
-                  <div class="description-block">
-                    <span class="description-text">${x.work_on_time!}</span>
-                  </div>
-                  <!-- /.description-block -->
-                </div>
-                <!-- /.col -->
-                <div class="col-xs-5">
-                  <div class="description-block">
-                    <span class="description-text">${x.work_off_time!}</span>
-                  </div>
-                  <!-- /.description-block -->
-                </div>
-                </div>
-                <!-- /.col -->
-              
-              </#list> 
-          </div>
-          </#if>
-		</div>
-   </div>
-   <#if jsonResult.rtnCode == 11>
-   <div style="width: 100%;position: fixed; bottom: 0px;font-weight: bold;text-align: center;background-color: #00a7d0;color: white; border: 1px solid #00a7d0;height:100px;line-height:50px;margin: auto;margin-top: 30px" onclick="toOrderHis()">历史订单</div>
-      <div style="width: 100%;position: fixed; bottom: 0px;font-weight: bold;text-align: center;background-color: #00d01a;color: white; border: 1px solid #00d01a;height:50px;line-height:50px;margin: auto;margin-top: 30px" onclick="startWork()">上班</div>
    
+  <div class="content-wrapper" style="overflow-x:hidden">
+
+  <div class="row" style="height: 165px;">
+
+        <div class="col-md-4">
+          <div class="box box-widget widget-user" style="background-color:#00a7d0 !important">
+            <div class="widget-user-header bg-aqua-active" style="height:100px">
+            </div>
+            <div class="widget-user-image"  style="top: 10px;width:90px;height:90px">
+              <img class="img-circle" src="${washMember.img!}" alt="User Avatar">
+            </div>
+			<div class="row" align="center" style="color:white">
+			 <h3 class="widget-user-username">${washMember.nickName!}</h3>
+			</div>
+			<div class="row" align="center" style="color:white">
+			<h5 class="widget-user-desc">好评数:${highPraiseCount!0};差评数：${badPraiseCount!0};</h5>
+			</div>
+          </div>
+        </div>
+        </div>
+
+
+	<div class="row">
+        <div class="col-lg-3 col-xs-6" style="padding-right: 5px;">
+          <!-- small box -->
+          <div class="small-box bg-aqua" style="margin-bottom: 5px;">
+          <div class="inner" style="padding-top: 5px;padding-bottom: 0px;">
+              <h3 style="margin-bottom: 0px;">${yesterdayCount!0}</h3>
+
+              <p>昨日订单数</p>
+            </div>
+            <a href="javascript:toTypeOrder(1);" class="small-box-footer">
+              More info <i class="fa fa-arrow-circle-right"></i>
+            </a>
+          </div>
+        </div>
+        <!-- ./col -->
+        <div class="col-lg-3 col-xs-6" style="padding-left: 5px;">
+          <!-- small box -->
+          <div class="small-box bg-green" style="margin-bottom: 5px;">
+            <div class="inner" style="padding-top: 5px;padding-bottom: 0px;">
+              <h3 style="margin-bottom: 0px;">${lastWeekCount!0}</h3>
+
+              <p>近7日订单数</p>
+            </div>
+            <a href="javascript:toTypeOrder(3);" class="small-box-footer">
+              More info <i class="fa fa-arrow-circle-right"></i>
+            </a>
+          </div>
+        </div>
+        <!-- ./col -->
+        <div class="col-lg-3 col-xs-6" style="padding-right: 5px;">
+          <!-- small box -->
+          <div class="small-box bg-yellow" style="margin-bottom: 5px;">
+            <div class="inner" style="padding-top: 5px;padding-bottom: 0px;">
+              <h3 style="margin-bottom: 0px;">${nowCount!0}</h3>
+
+              <p>今日订单数</p>
+            </div>
+            <a href="javascript:toTypeOrder(2);" class="small-box-footer">
+              More info <i class="fa fa-arrow-circle-right"></i>
+            </a>
+          </div>
+        </div>
+        <!-- ./col -->
+        <div class="col-lg-3 col-xs-6" style="padding-left: 5px;">
+          <!-- small box -->
+          <div class="small-box bg-red" style="margin-bottom: 5px;">
+            <div class="inner" style="padding-top: 5px;padding-bottom: 0px;">
+              <h3 style="margin-bottom: 0px;">${waitCount!0}</h3>
+
+              <p>排队订单</p>
+            </div>
+            <a href="javascript:toOrder();" class="small-box-footer">
+              More info <i class="fa fa-arrow-circle-right"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+
+
+
+
+	  <div class="box">
+            <div class="box-header">
+              <h3 class="box-title">Condensed Full Width Table</h3>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body no-padding">
+              <table class="table table-condensed">
+                <tr>
+                  <th style="width: 30px">设备号</th>
+                  <th>支付时间</th>
+                  <th style="width: 40px">Label</th>
+                </tr>
+                <tr>
+                  <td>Update software</td>
+                  <td>
+                    <div class="progress progress-xs">
+                      <div class="progress-bar progress-bar-danger" style="width: 55%"></div>
+                    </div>
+                  </td>
+                  <td><span class="badge bg-red">55%</span></td>
+                </tr>
+                
+              </table>
+            </div>
+          </div>
+</div>
+<#if jsonResult.rtnCode == 11>
+      <div style="width: 100%;position: fixed; bottom: 0px;font-weight: bold;text-align: center;background-color: #00d01a;color: white; border: 1px solid #00d01a;height:50px;line-height:50px;margin: auto;margin-top: 30px" onclick="startWork()">上班</div>
    <#elseif jsonResult.rtnCode == 10>
-         <div style="width: 100%;position: fixed; bottom: 0px;font-weight: bold;text-align: center;background-color: #00a7d0;color: white; border: 1px solid #00a7d0;height:100px;line-height:50px;margin: auto;margin-top: 30px" onclick="toOrder()">查看订单</div>
    <div style="width: 100%;position: fixed; bottom: 0px;font-weight: bold;text-align: center;background-color: #f5104f;color: white; border: 1px solid #f5104f;height:50px;line-height:50px;margin: auto;margin-top: 30px" onclick="endWork()">下班</div>
    <#elseif jsonResult.rtnCode == 20>
    <div style="width: 100%;position: fixed; bottom: 0px;font-weight: bold;text-align: center;background-color: #00a7d0;color: white; border: 1px solid #00a7d0;height:50px;line-height:50px;margin: auto;margin-top: 30px" onclick="toOrder()">打开设备</div>
-   <#else>
-         <div style="width: 100%;position: fixed; bottom: 0px;font-weight: bold;text-align: center;background-color: #00a7d0;color: white; border: 1px solid #00a7d0;height:50px;line-height:50px;margin: auto;margin-top: 30px" onclick="toOrderHis()">历史订单</div>
-   
    </#if> 
+      </div>
    <input type="hidden" id="device_mac" name="device_mac" value="${device_mac!}"> 
   </form>
 <!-- jQuery 2.2.3 -->
@@ -194,6 +224,11 @@ function toOrder(){
 function toOrderHis(){
 	window.location.href = "${CPATH}/wash/order/forwardHis";
 }
+
+function toTypeOrder(str){
+	window.location.href = "${CPATH}/wash/order/forwardTypeHis?type="+str;
+}
+
 </script>
 </body>
 </html>

@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="${SPATH}/layer.mobile-v2.0/layer_mobile/need/layer.css">
 </head>
  <body>
+ <form id="editForm">
  <div>
     <div class="page__bd">
 
@@ -16,7 +17,7 @@
         <div class="weui-cells weui-cells_checkbox">
             <label class="weui-cell weui-check__label" for="s11">
                 <div class="weui-cell__hd">
-                    <input type="radio" class="weui-check" name="radio" id="s11" value="0" checked="checked"/>
+                    <input type="radio" class="weui-check" name="flag" id="s11" value="0" checked="checked"/>
                     <i class="weui-icon-checked"></i>
                 </div>
                 <div class="weui-cell__bd">
@@ -25,7 +26,7 @@
             </label>
             <label class="weui-cell weui-check__label" for="s12">
                 <div class="weui-cell__hd">
-                    <input type="radio" name="radio" class="weui-check" id="s12" value="1"/>
+                    <input type="radio" name="flag" class="weui-check" id="s12" value="1"/>
                     <i class="weui-icon-checked"></i>
                 </div>
                 <div class="weui-cell__bd">
@@ -34,7 +35,7 @@
             </label>
 			<label class="weui-cell weui-check__label" for="s13">
                 <div class="weui-cell__hd">
-                    <input type="radio" name="radio" class="weui-check" id="s13" value="2"/>
+                    <input type="radio" name="flag" class="weui-check" id="s13" value="2"/>
                     <i class="weui-icon-checked"></i>
                 </div>
                 <div class="weui-cell__bd">
@@ -58,21 +59,19 @@
         </div>
     </div>
 </div>
-<input type="hidden" name="order_id" id="order_id" value="${order_id!}"/>
+<input type="hidden" name="orderId" id="orderId" value="${order_id!}"/>
+</form>
 <script src="${SPATH}/js/zepto.min.js"></script>
 <script type="text/javascript" src="${SPATH}/js/jweixin-1.0.0.js"></script>
 <script src="${SPATH}/js/weui.min.js"></script>
 <script src="${SPATH}/js/example.js"></script>
 <script src="${SPATH}/layer.mobile-v2.0/layer_mobile/layer.js"></script>
 <script>
+
 function appraise(){
 	$.ajax({
         url:"${CPATH}/car/order/appraise",
-        data:{
-        	"evaluate": $("#evaluate").val(),
-        	"orderId": $("#order_id").val(),
-        	"flag": $("input[name='radio'][checked]").val()
-        },
+        data:$("#editForm").serialize(),
         type:"post",
         async: false,
         //dataType: 'json',

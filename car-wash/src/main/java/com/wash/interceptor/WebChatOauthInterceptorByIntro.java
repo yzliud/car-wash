@@ -52,6 +52,10 @@ public class WebChatOauthInterceptorByIntro implements Interceptor {
 			}
 			//判断是否是黑名单用户
 			WashMember wm = WashMember.dao.findFirst("select * from wash_member WHERE open_id = ? ", openId);
+			
+			controller.setSessionAttr("memberIdSession", wm.getId());
+			controller.setSessionAttr("memberDataSession", wm);
+			
 			if(wm != null && wm.getStatus().equals("1")){
 				try {
 					log.info("************WashMember*********" + wm.toJson());
@@ -110,9 +114,7 @@ public class WebChatOauthInterceptorByIntro implements Interceptor {
 		    	washMember.setLastTime(new Date());
 		    	washMember.update();
 		    }
-			controller.setSessionAttr("memberIdSession", washMember.getId());
 			
-			controller.setSessionAttr("memberDataSession", washMember);
 	}
 	
 }

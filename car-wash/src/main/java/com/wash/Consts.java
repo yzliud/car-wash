@@ -38,5 +38,11 @@ public class Consts {
 	public final static String payMode_1 = "1";
 	public final static String payMode_2 = "2";
 	public final static String payMode_3 = "3";
+	
+	//优惠卷状态(0-未领取 1-已领取 2-已使用)
+	public final static String CouponStatus_0 = "0";
+	public final static String CouponStatus_1 = "1";
+	public final static String CouponStatus_2 = "2";
+	public final static String CouponStatus_9 = "9"; //失效
 
 }

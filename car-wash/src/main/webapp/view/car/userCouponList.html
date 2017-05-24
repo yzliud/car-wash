@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<!-- saved from url=(0016)https://weui.io/ -->
+<html lang="zh-cmn-Hans"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <title>个人优惠卷</title>
+    <link rel="stylesheet" href="${SPATH}/css/mui.min.css">
+    <link rel="stylesheet" href="${SPATH}/weui/weui.css">
+    <link rel="stylesheet" href="${SPATH}/weui/example.css">
+    <link rel="stylesheet" href="${SPATH}/layer.mobile-v2.0/layer_mobile/need/layer.css">
+    <link rel="stylesheet" href="${SPATH}/bootstrap/css/bootstrap.min.css">
+
+  <!-- Theme style -->
+  <link rel="stylesheet" href="${SPATH}/dist/css/AdminLTE.min.css">
+      <link rel="stylesheet" href="${SPATH}/awesome/4.4/css/font-awesome.min.css">
+</head>
+ <body>
+        <div class="weui-tab" style="height: 45px;">
+            <div class="weui-navbar">
+                <div class="weui-navbar__item weui-bar__item_on use" >
+                    未使用<input type='hidden'  name='type' class='1' value='1'>
+                </div>
+                <div class="weui-navbar__item" >
+                    已使用<input type='hidden'  name='type' class='1' value='2'>
+                </div>
+                <div class="weui-navbar__item" >
+                    已过期<input type='hidden'  name='type' class='1' value='9'>
+                </div>
+            </div>
+           </div>
+
+            <div id="pullrefresh" class="weui-tab__panel mui-content ">
+				<div class="mui-scroll" >
+					<div id="space">
+					
+					</div>
+				</div>
+			</div>
+  
+<input type='hidden' id='status' name='status' value='1'>
+<script type="text/javascript" src="${SPATH}/js/jquery.min.js"></script>
+<script src="${SPATH}/js/mui.min.js"></script>
+<script src="${SPATH}/layer.mobile-v2.0/layer_mobile/layer.js"></script>
+<script>
+$(function(){
+    $('.weui-navbar__item').on('click', function () {
+        $(this).addClass('weui-bar__item_on').siblings('.weui-bar__item_on').removeClass('weui-bar__item_on');
+        var nowstatus = $(this).children("input.1").val();
+        if(nowstatus != $('#status').val()){
+        	count = 1;
+        	$('#status').val(nowstatus);
+        	pullupRefresh();
+        }
+        
+    });
+});
+</script>
+<script type="text/javascript" charset="utf-8">
+
+	/**
+	 * 下拉刷新具体业务实现
+	 */
+	function pulldownRefresh() {
+		setTimeout(function() {
+			page = 1;
+			//刷新的业务
+			
+			mui('#pullrefresh').pullRefresh().endPulldownToRefresh(); //refresh completed
+		}, 1500);
+	}
+
+	/**
+	 * 上拉加载具体业务实现
+	 */
+	var count = 1; 
+	function pullupRefresh() {
+		setTimeout(function() {
+			$.ajax({
+				type: "post",
+				url: "${CPATH}/car/coupon/couponList",
+				data: {
+					"pageNumber": count, // 传过去的页码
+					"counStatus": $("#status").val()
+				},
+				dataType: "JSON",
+				success: function(data) {
+					count = count + 1;
+					var datalist = data.list;
+					console.log('变量：',datalist);
+					if( count == 2){
+						$("#space").empty();
+					}
+ 					mui('#pullrefresh').pullRefresh().endPullupToRefresh((datalist.length == 0)); //参数为true代表没有更多数据了。
+ 						for(var i = 0; i < datalist.length; i++) {
+ 						var div = document.createElement('div');
+ 						div.className = 'weui-form-preview';
+ 						div.style = 'margin-top: 10px;';	
+						var neirong = 
+							"<div class='row'>"+
+							 	" <div class='col-md-3 col-sm-6 col-xs-12'>";
+							 	if($("#status").val() == '1'){
+							 		neirong = neirong +"   <div class='info-box bg-yellow' style='margin-bottom: 0px;'>"+
+						          "  <span class='info-box-icon'><i class='fa fa-automobile'></i></span>";
+ 								}else if($("#status").val() == '9'){
+ 									neirong = neirong +"   <div class='info-box bg-red' style='margin-bottom: 0px;'>"+
+ 							          "  <span class='info-box-icon'><i class='fa fa-automobile'></i></span>";
+ 								}else{
+ 									neirong = neirong +"   <div class='info-box bg-green' style='margin-bottom: 0px;'>"+
+							          "  <span class='info-box-icon'><i class='fa fa-automobile'></i></span>";
+								}
+ 						neirong = neirong + "  <div class='info-box-content'>"+
+						           "   <span class='info-box-text'> "+datalist[i].coupon_name+"</span>"+
+						           "   <span class='info-box-number'> 抵用金额："+datalist[i].discount_amount+"元</span>"+
+						                "  <span class='progress-description'>有效期："+datalist[i].effective_time.substring(0,10)+" 到  "+datalist[i].failure_time.substring(0,10)+"</span>"+
+						            "</div>"+
+						         " </div>"+
+						        "</div>"+
+							" </div>";
+
+		            		div.innerHTML = neirong;
+						
+						$("#space").append(div);
+					}
+				},
+				error: function() {}
+			});
+		}, 1500);
+	}
+
+	mui.init({
+		pullRefresh : {
+			container : '#pullrefresh',
+			down : {
+				callback : pulldownRefresh
+			},
+			up : {
+				contentrefresh : '正在加载...',
+				callback : pullupRefresh
+			}
+		}
+	});
+	
+	if(mui.os.plus) {
+		mui.plusReady(function() {
+			setTimeout(function() {
+				mui('#pullrefresh').pullRefresh().pullupLoading();
+			}, 1000);
+
+		});
+	} else {
+		mui.ready(function() {
+			mui('#pullrefresh').pullRefresh().pullupLoading();
+		});
+	}
+
+	mui("#pullrefresh").on('tap', 'div', function(event) {
+		this.click();
+	});
+	mui("#pullrefresh").on('tap', 'button', function(event) {
+		this.click();
+	});
+
+	function getQueryString(name) { //输入参数名称
+		var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i"); //根据参数格式，正则表达式解析参数
+		var r = window.location.search.substr(1).match(reg);
+		if (r != null)
+			return unescape(r[2]);
+		return null; //返回参数值
+	}
+</script>
+
+ </body>
+</html>

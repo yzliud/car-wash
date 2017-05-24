@@ -17,6 +17,8 @@ public class _MappingKit {
 
 	public static void mapping(ActiveRecordPlugin arp) {
 		
+		arp.addMapping("wash_coupon", "id", WashCoupon.class);
+		arp.addMapping("wash_coupon_detail", "id", WashCouponDetail.class);
 		arp.addMapping("wash_device", "id", WashDevice.class);
 		arp.addMapping("wash_device_fault", "id", WashDeviceFault.class);
 		arp.addMapping("wash_device_heart", "id", WashDeviceHeart.class);

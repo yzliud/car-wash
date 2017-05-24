@@ -1,9 +1,12 @@
 package com.wash.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.jfinal.core.Controller;
 import com.jfinal.log.Log;
 import com.samehope.core.render.JsonResult;
-import com.wash.Sms;
+import com.samehope.plugin.ali.Sms;
 import com.wash.model.WashMember;
 
 public class CarController extends Controller{
@@ -16,9 +19,12 @@ public class CarController extends Controller{
 	public void sendCode(){
 		String mobile = getPara("mobile");
 		int code = (int) (Math.random() * 9000 + 1000);
-		String content = "您的验证码是：";
-		String msg = content + code;
-		Sms.send(msg, mobile);
+//		String content = "您的验证码是：";
+//		String msg = content + code;
+//		Sms.send(msg, mobile);
+		List<String> mobileList = new ArrayList<String>();
+		mobileList.add(mobile);
+		Sms.sendMsg(mobileList, code+"");
 		setSessionAttr("codeSession", code+"");
 		log.info("code="+code);
 		renderNull();

@@ -25,6 +25,7 @@ import com.jfinal.template.Engine;
 import com.samehope.plugin.wechat.jspay.WechatPay;
 import com.samehope.plugin.wechat.oauth2.WechatOauth2Controller;
 import com.wash.controller.CarController;
+import com.wash.controller.CouponController;
 import com.wash.controller.DeviceController;
 import com.wash.controller.ErrorController;
 import com.wash.controller.OrderController;
@@ -67,6 +68,7 @@ public class WashConfig extends JFinalConfig {
 		//车主
 		me.add("/car/member", CarController.class,"/view/car");
 		me.add("/car/order", OrderController.class,"/view/car");
+		me.add("/car/coupon", CouponController.class,"/view/car");
 		
 		
 		me.add("/error", ErrorController.class,"/view");

@@ -68,10 +68,7 @@ public class DeviceController extends Controller {
 						washOrdOrder.setUpdateDate(date);
 						washOrdOrder.update();
 						
-						WashMember wm = WashMember.dao.findById(washOrdOrder.getCarPersonId());
 						
-						String path ="http://" + getRequest().getServerName()+getRequest().getContextPath();
-						sendWeMsg(wm.getOpenId(), washOrdOrder, path);
 					}else if (command.equals("1")){
 						msg = "G\n";
 						//更新订单洗车工及状
@@ -80,7 +77,10 @@ public class DeviceController extends Controller {
 						washOrdOrder.setEndTime(date);
 						washOrdOrder.update();
 						
+						WashMember wm = WashMember.dao.findById(washOrdOrder.getCarPersonId());
 						
+						String path ="http://" + getRequest().getServerName()+getRequest().getContextPath();
+						sendWeMsg(wm.getOpenId(), washOrdOrder, path);
 						
 					}else if (command.equals("2")){
 						msg = "K\n";
@@ -173,7 +173,7 @@ public class DeviceController extends Controller {
 			WechatPushMsgConfig wechatPushMsgConfig = WechatPushMsgConfig.getWechatPushMsgConfig(PropKit.use("wx_config.properties").get("appid"), 
 					PropKit.use("wx_config.properties").get("secret"), 
 					openId, 
-					"EBrqkM7H5b1lALOpmLOP7OIJzm4GHOiaP6NrR2dm_js",
+					"pgfnatrhAH4MCqseEsUcR7Tc4E4_hbbyN1J4s56KyPE",
 					path + PropKit.use("wx_config.properties").get("appraise_jumpurl") + washOrdOrder.getId());
 			String pushWXTemplateMsg = WechatKit.pushWXTemplateMsg(wechatPushMsgConfig,dataMap);
 			log.info("WXMsg:" + pushWXTemplateMsg);
