@@ -99,13 +99,13 @@ public abstract class BaseWashCoupon<M extends BaseWashCoupon<M>> extends Model<
 		return get("remarks");
 	}
 
-	public M setCreateTime(java.util.Date createTime) {
-		set("create_time", createTime);
+	public M setCreateDate(java.util.Date createDate) {
+		set("create_date", createDate);
 		return (M)this;
 	}
 
-	public java.util.Date getCreateTime() {
-		return get("create_time");
+	public java.util.Date getCreateDate() {
+		return get("create_date");
 	}
 
 	public M setCreateBy(java.lang.String createBy) {
@@ -117,13 +117,13 @@ public abstract class BaseWashCoupon<M extends BaseWashCoupon<M>> extends Model<
 		return get("create_by");
 	}
 
-	public M setUpdateTime(java.util.Date updateTime) {
-		set("update_time", updateTime);
+	public M setUpdateDate(java.util.Date updateDate) {
+		set("update_date", updateDate);
 		return (M)this;
 	}
 
-	public java.util.Date getUpdateTime() {
-		return get("update_time");
+	public java.util.Date getUpdateDate() {
+		return get("update_date");
 	}
 
 	public M setUpdateBy(java.lang.String updateBy) {

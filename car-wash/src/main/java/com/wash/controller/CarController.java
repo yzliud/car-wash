@@ -3,6 +3,7 @@ package com.wash.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.jfinal.aop.Clear;
 import com.jfinal.core.Controller;
 import com.jfinal.log.Log;
 import com.samehope.core.render.JsonResult;
@@ -16,6 +17,7 @@ public class CarController extends Controller{
 	/**
 	 * 发送验证码
 	 */
+	@Clear
 	public void sendCode(){
 		String mobile = getPara("mobile");
 		int code = (int) (Math.random() * 9000 + 1000);

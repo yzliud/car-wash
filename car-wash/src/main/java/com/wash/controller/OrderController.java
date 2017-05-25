@@ -22,12 +22,14 @@ import com.samehope.plugin.wechat.WechatKit;
 import com.samehope.plugin.wechat.jspay.WechatPay;
 import com.samehope.plugin.wechat.model.WechatConfig;
 import com.wash.Consts;
+import com.wash.model.WashCompanyPurse;
 import com.wash.model.WashCouponDetail;
 import com.wash.model.WashDevice;
 import com.wash.model.WashMember;
 import com.wash.model.WashOrdEvaluate;
 import com.wash.model.WashOrdOrder;
 import com.wash.model.WashSetMeal;
+import com.wash.model.WashTFlow;
 import com.wash.model.WashWorkPerson;
 
 public class OrderController extends Controller{
@@ -185,6 +187,34 @@ public class OrderController extends Controller{
 					woo.setUpdateDate(date);
 					rtnFlag = woo.update();
 					
+					int flowId = Db.queryInt(" select _nextval('flow_sn') ");
+					
+					//流水
+					WashTFlow washTFlow = new WashTFlow();
+					washTFlow.setId(flowId+"");
+					washTFlow.setTSn(woo.getOrderNo());
+					washTFlow.setTType("00");
+					washTFlow.setMemberId(woo.getCarPersonId());
+					washTFlow.setTppType(0);
+					washTFlow.setTAmount(woo.getRealFee());
+					washTFlow.setTppSn(woo.getPaySerialNumber());
+					washTFlow.save();
+					
+					WashCompanyPurse washCompanyPurse = WashCompanyPurse.dao.findFirst("select * from wash_company_purse order by t_datetime desc ");
+					BigDecimal balance = new BigDecimal(0);
+					if(null != washCompanyPurse){
+						balance = washCompanyPurse.getBalance();
+					}
+					BigDecimal income = woo.getRealFee();
+					WashCompanyPurse wcp = new WashCompanyPurse();
+					wcp.setId(UuidUtils.getUuid());
+					wcp.setUid(woo.getCarPersonId());
+					wcp.setTFlowNo(flowId+"");
+					wcp.setTType("0");
+					wcp.setTDatetime(new Date());
+					wcp.setIncome(income);
+					wcp.setPay(new BigDecimal(0));
+					wcp.setBalance(balance.add(income));
 					//更新优惠卷使用信息
 					Db.update("update wash_coupon_detail set status = 2, update_time = now() where order_no = ? ", orderId);
 				}

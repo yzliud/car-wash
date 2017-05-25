@@ -27,21 +27,27 @@
  <body>
  <div class="row">
  <div class="col-md-4">
-          <div class="box box-widget widget-user-2">
-            <div class="widget-user-header bg-yellow">
-              <div class="widget-user-image" style="top: 10px;width:90px;heitht:90px">
-                <img class="img-circle" src="${washMember.img!}" alt="User Avatar">
-              </div>
-              <h3 class="widget-user-username" style="margin-top: 20px;">${washMember.nickName!}</h3>
+ 			<div class="box box-widget widget-user" style="background-color:#00a7d0 !important;margin-bottom: 0px;">
+            <div class="widget-user-header bg-aqua-active" style="height:100px">
             </div>
+            <div class="widget-user-image"  style="top: 10px;width:90px;height:90px">
+              <img class="img-circle" src="${washMember.img!}" alt="User Avatar">
+            </div>
+			<div class="row" align="center" style="color:white;margin-top: 5px;">
+			 <h3 class="widget-user-username">${washMember.nickName!}</h3>
+			</div>
+          </div>
+          
+          <div class="box box-widget widget-user-2">
+          
             <div class="box-footer no-padding">
               <ul class="nav nav-stacked">
-                <li><a href="javascript:forwardUserInfo();">车牌绑定 </a></li>
-                <li><a href="javascript:forwardOrderHis();">我的订单</a></li>
-                <li><a href="javascript:forwardCoupon();">领取优惠卷 </a></li>
-                <li><a href="javascript:forwardCouponList();">我的优惠卷</a></li>
+                <li onclick="javascript:forwardUserInfo();" ><a href="#">车牌绑定</a> </li>
+                <li onclick="javascript:forwardOrderHis();" ><a href="#">我的订单</a></li>
+                <li onclick="javascript:forwardCoupon();" > <a href="#">领取优惠卷 </a></li>
+                <li onclick="javascript:forwardCouponList();" ><a href="#">我的优惠卷</a></li>
                 <#if washMember.userType == '1'> 
-                <li><a href="javascript:forwardWashOrder();">洗车订单 </a></li>
+                <li onclick="javascript:forwardWashOrder();" ><a href="#">洗车订单 </a></li>
                 </#if>
               </ul>
             </div>

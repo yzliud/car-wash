@@ -33,6 +33,7 @@ import com.wash.controller.WashOrderController;
 import com.wash.controller.WorkController;
 import com.wash.handler.SysHandler;
 import com.wash.interceptor.WebChatOauthInterceptorByIntro;
+import com.wash.job.HeartJob;
 import com.wash.job.OrderJob;
 import com.wash.model._MappingKit;
 import com.wash.websocket.DeviceServer;
@@ -132,6 +133,7 @@ public class WashConfig extends JFinalConfig {
 		}).start();
 		
 		new QuartzCronJob(new QuartzKey(1, "test", "test"), "0 */10 * * * ?", OrderJob.class).start();
+		new QuartzCronJob(new QuartzKey(2, "test1", "test1"), "0 */10 * * * ?", HeartJob.class).start();
 		
 		log.info("System Start~!");
 	}

@@ -25,17 +25,28 @@ public class DeviceServerHandler extends ChannelInboundHandlerAdapter {
 			String body = msg.toString();
 			log.info("DeviceServerHandler::::‘BODY’ from device client:" + body);
 			//接收心跳	
-			log.info("接收心跳...........");
-			List<Object> paramsList = new ArrayList<Object>();
-			paramsList.add(body);
-			//将通道保存
-			Global.deviceMap.put(body, ctx.channel());
-			//保存心跳信息
-			WashDeviceHeart washDeviceHeart = new WashDeviceHeart();
-			washDeviceHeart.setId(UuidUtils.getUuid());
-			washDeviceHeart.setMac(body);
-			washDeviceHeart.setOperatorTime(new Date());
-			washDeviceHeart.save();
+			if(body.length() > 2){
+
+				log.info("接收心跳...........");
+				List<Object> paramsList = new ArrayList<Object>();
+				paramsList.add(body);
+				//将通道保存
+				Global.deviceMap.put(body, ctx.channel());
+				//保存心跳信息
+				WashDeviceHeart washDeviceHeart = WashDeviceHeart.dao.findFirst("select * from wash_device_heart where mac = ? ", body);
+				if(null == washDeviceHeart){
+					washDeviceHeart = new WashDeviceHeart();
+					washDeviceHeart.setId(UuidUtils.getUuid());
+					washDeviceHeart.setMac(body);
+					washDeviceHeart.setOperatorTime(new Date());
+					washDeviceHeart.save();
+				}else{
+					washDeviceHeart.setMac(body);
+					washDeviceHeart.setOperatorTime(new Date());
+					washDeviceHeart.update();
+				}
+			}
+			
 			log.info("信道写入！信道ID：：："+body + "++信道的值：：：" + ctx.channel());
 		}
 	}

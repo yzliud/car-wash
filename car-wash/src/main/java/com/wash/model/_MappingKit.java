@@ -17,6 +17,7 @@ public class _MappingKit {
 
 	public static void mapping(ActiveRecordPlugin arp) {
 		
+		arp.addMapping("wash_company_purse", "id", WashCompanyPurse.class);
 		arp.addMapping("wash_coupon", "id", WashCoupon.class);
 		arp.addMapping("wash_coupon_detail", "id", WashCouponDetail.class);
 		arp.addMapping("wash_device", "id", WashDevice.class);
@@ -29,6 +30,7 @@ public class _MappingKit {
 		arp.addMapping("wash_ord_set_meal", "id", WashOrdSetMeal.class);
 		arp.addMapping("wash_set_meal", "id", WashSetMeal.class);
 		arp.addMapping("wash_t_flow", "id", WashTFlow.class);
+		arp.addMapping("wash_tb_sequence", "name", WashTbSequence.class);
 		arp.addMapping("wash_work_device_record", "id", WashWorkDeviceRecord.class);
 		arp.addMapping("wash_work_person", "id", WashWorkPerson.class);
 	}
