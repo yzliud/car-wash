@@ -55,19 +55,19 @@
 	<div class="row">
         <div class="col-lg-3 col-xs-6" style="padding-right: 5px;">
           <!-- small box -->
-          <div class="small-box bg-aqua" style="margin-bottom: 5px;">
+          <div class="small-box bg-aqua" style="margin-bottom: 5px;" onclick="javascript:toTypeOrder(1);">
           <div class="inner" style="padding-top: 5px;padding-bottom: 0px;">
               <h3 style="margin-bottom: 0px;">${yesterdayCount!0}</h3>
 
               <p>昨日订单数</p>
             </div>
-            <a href="javascript:toTypeOrder(1);" class="small-box-footer">
-              More info <i class="fa fa-arrow-circle-right"></i>
+            <a href="#" class="small-box-footer">
+              更多 <i class="fa fa-arrow-circle-right"></i>
             </a>
           </div>
         </div>
         <!-- ./col -->
-        <div class="col-lg-3 col-xs-6" style="padding-left: 5px;">
+        <div class="col-lg-3 col-xs-6" style="padding-left: 5px;" onclick="javascript:toTypeOrder(3);">
           <!-- small box -->
           <div class="small-box bg-green" style="margin-bottom: 5px;">
             <div class="inner" style="padding-top: 5px;padding-bottom: 0px;">
@@ -75,13 +75,13 @@
 
               <p>近7日订单数</p>
             </div>
-            <a href="javascript:toTypeOrder(3);" class="small-box-footer">
-              More info <i class="fa fa-arrow-circle-right"></i>
+            <a href="#" class="small-box-footer">
+              更多 <i class="fa fa-arrow-circle-right"></i>
             </a>
           </div>
         </div>
         <!-- ./col -->
-        <div class="col-lg-3 col-xs-6" style="padding-right: 5px;">
+        <div class="col-lg-3 col-xs-6" style="padding-right: 5px;" onclick="javascript:toTypeOrder(2);">
           <!-- small box -->
           <div class="small-box bg-yellow" style="margin-bottom: 5px;">
             <div class="inner" style="padding-top: 5px;padding-bottom: 0px;">
@@ -89,13 +89,13 @@
 
               <p>今日订单数</p>
             </div>
-            <a href="javascript:toTypeOrder(2);" class="small-box-footer">
-              More info <i class="fa fa-arrow-circle-right"></i>
+            <a href="#" class="small-box-footer">
+              更多 <i class="fa fa-arrow-circle-right"></i>
             </a>
           </div>
         </div>
         <!-- ./col -->
-        <div class="col-lg-3 col-xs-6" style="padding-left: 5px;">
+        <div class="col-lg-3 col-xs-6" style="padding-left: 5px;" onclick="javascript:toOrder();">
           <!-- small box -->
           <div class="small-box bg-red" style="margin-bottom: 5px;">
             <div class="inner" style="padding-top: 5px;padding-bottom: 0px;">
@@ -103,8 +103,8 @@
 
               <p>排队订单</p>
             </div>
-            <a href="javascript:toOrder();" class="small-box-footer">
-              More info <i class="fa fa-arrow-circle-right"></i>
+            <a href="#" class="small-box-footer">
+              更多 <i class="fa fa-arrow-circle-right"></i>
             </a>
           </div>
         </div>
@@ -112,11 +112,11 @@
 
 </div>
 <#if jsonResult.rtnCode == 11>
-      <div style="width: 100%;position: fixed; bottom: 0px;font-weight: bold;text-align: center;background-color: #00d01a;color: white; border: 1px solid #00d01a;height:50px;line-height:50px;margin: auto;margin-top: 30px" onclick="startWork()">上班</div>
+      <div style="font-size:20px; width: 100%;position: fixed; bottom: 0px;font-weight: bold;text-align: center;background-color: #00d01a;color: white; border: 1px solid #00d01a;height:50px;line-height:50px;margin: auto;margin-top: 30px" onclick="startWork()">上&nbsp;&nbsp;班</div>
    <#elseif jsonResult.rtnCode == 10>
-   <div style="width: 100%;position: fixed; bottom: 0px;font-weight: bold;text-align: center;background-color: #f5104f;color: white; border: 1px solid #f5104f;height:50px;line-height:50px;margin: auto;margin-top: 30px" onclick="endWork()">下班</div>
+   <div style="font-size:20px; width: 100%;position: fixed; bottom: 0px;font-weight: bold;text-align: center;background-color: #f5104f;color: white; border: 1px solid #f5104f;height:50px;line-height:50px;margin: auto;margin-top: 30px" onclick="endWork()">下&nbsp;&nbsp;班</div>
    <#elseif jsonResult.rtnCode == 20>
-   <div style="width: 100%;position: fixed; bottom: 0px;font-weight: bold;text-align: center;background-color: #00a7d0;color: white; border: 1px solid #00a7d0;height:50px;line-height:50px;margin: auto;margin-top: 30px" onclick="toOrder()">打开设备</div>
+   <div style="font-size:20px; width: 100%;position: fixed; bottom: 0px;font-weight: bold;text-align: center;background-color: #00a7d0;color: white; border: 1px solid #00a7d0;height:50px;line-height:50px;margin: auto;margin-top: 30px" onclick="toOrder()">打开设备</div>
    </#if> 
       </div>
    <input type="hidden" id="device_mac" name="device_mac" value="${device_mac!}"> 
