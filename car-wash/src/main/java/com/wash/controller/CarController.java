@@ -8,6 +8,7 @@ import com.jfinal.core.Controller;
 import com.jfinal.log.Log;
 import com.samehope.core.render.JsonResult;
 import com.samehope.plugin.ali.Sms;
+import com.wash.Consts;
 import com.wash.model.WashMember;
 
 public class CarController extends Controller{
@@ -101,6 +102,20 @@ public class CarController extends Controller{
 		}
 		
 		renderJson(jsonResult);
+	}
+	
+	/**
+	 * 扫码跳转
+	 */
+	public void forwardIndex(){
+		WashMember washMember = getSessionAttr("memberDataSession");
+		if(null != washMember){
+			if(washMember.getUserType().equals(Consts.UserType_0)){
+				forwardAction("/car/order/forwardOrder");
+			}else{
+				forwardAction("/wash/work/forwardWork");
+			}
+		}
 	}
 
 }

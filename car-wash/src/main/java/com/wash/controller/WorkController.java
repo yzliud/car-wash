@@ -1,13 +1,10 @@
 package com.wash.controller;
 
-import java.util.List;
-
 import org.jsoup.helper.StringUtil;
 
 import com.jfinal.core.Controller;
 import com.jfinal.log.Log;
 import com.jfinal.plugin.activerecord.Db;
-import com.jfinal.plugin.activerecord.Record;
 import com.samehope.core.render.JsonResult;
 import com.wash.Consts;
 import com.wash.model.WashDevice;
@@ -106,8 +103,8 @@ public class WorkController extends Controller {
 			setAttr("badPraiseCount", badPraiseCount);
 			
 			//排队订单
-			List<Record> waitList = Db.find("select * from wash_ord_order where device_mac = ? and DATE_FORMAT(pay_time,'%Y-%m-%d')=DATE_FORMAT(NOW(),'%Y-%m-%d') and order_status in(1,2) order by update_date desc limit 0,3 ", mac);
-			setAttr("waitList", waitList);
+//			List<Record> waitList = Db.find("select * from wash_ord_order where device_mac = ? and DATE_FORMAT(pay_time,'%Y-%m-%d')=DATE_FORMAT(NOW(),'%Y-%m-%d') and order_status in(1,2) order by update_date desc limit 0,3 ", mac);
+//			setAttr("waitList", waitList);
 			
 			//个人信息
 			setAttr("washMember", (WashMember)getSessionAttr("memberDataSession"));
@@ -135,7 +132,8 @@ public class WorkController extends Controller {
 		if(null != washDevice){
 			//设备是否在线
 			if(null != washDevice.getStatus() && Consts.DeviceStatus_0.equals(washDevice.getStatus())){
-				WorkService.startWork(washDevice, memberId);
+				WorkService workService = enhance(WorkService.class);
+				workService.startWork(washDevice, memberId);
 				
 				jsonResult.setRtnCode(0);
 				jsonResult.setRtnMsg("操作成功");

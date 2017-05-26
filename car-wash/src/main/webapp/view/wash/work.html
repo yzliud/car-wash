@@ -29,7 +29,7 @@
    
   <div class="content-wrapper" style="overflow-x:hidden">
 
-  <div class="row" style="height: 175px;">
+  <div class="row" style="height: 185px;">
 
         <div class="col-md-4">
           <div class="box box-widget widget-user" style="background-color:#00a7d0 !important">
@@ -139,21 +139,23 @@ function startWork(){
 	            async: false,
 	            //dataType: 'json',
 	            success:function(data){//ajax返回的数据
-	            	console.log('data'+data);
+	           		 
 	           		 if(data.rtnCode==0){
-	           			layer.open({
-	           			    content: data.rtnMsg
-	           			    ,btn: '确定'
-           			    	,yes: function(index){
-           			    		$("#editForm").submit();
-	           			    }
-	           			  });
-	           	 	}else{
-	           	 	layer.open({
-           			    content: data.rtnMsg
-           			    ,btn: '确定'
-           			  });
-	           	 	}
+	  	       			layer.open({
+	  	       				content: data.rtnMsg,
+	  	       				skin: 'msg',
+	  	       				time: 2,
+	  	       				end: function(){
+	  	       					$("#editForm").submit();
+	  	       				}
+	  	       			});
+	  	       	 	}else{
+	  		       	 	layer.open({
+	  		    			content: data.rtnMsg,
+	  		    			skin: 'msg',
+	  		    			time: 2
+	  		    		});
+	  	       	 	}
 	            }
 	       }); 
 }
@@ -170,22 +172,23 @@ function endWork(){
 	            async: false,
 	            //dataType: 'json',
 	            success:function(data){//ajax返回的数据
-	            	console.log('data'+data);
-	           		 if(data.rtnCode==0){
-	           			layer.open({
-	           			    content: data.rtnMsg
-	           			    ,btn: '确定'
-           			    	,yes: function(index){
-           			    		window.location.href = "${CPATH}/wash/order/forwardHis";
-	           			    }
-	           			  });
-	           		
-	           	 	}else{
-	           	 	layer.open({
-	       			    content: data.rtnMsg
-	       			    ,btn: '确定'
-	       			  });
-	           	 	}
+	           		 
+	           		if(data.rtnCode==0){
+	  	       			layer.open({
+	  	       				content: data.rtnMsg,
+	  	       				skin: 'msg',
+	  	       				time: 2,
+	  	       				end: function(){
+	  	       				window.location.href = "${CPATH}/wash/order/forwardHis";
+	  	       				}
+	  	       			});
+	  	       	 	}else{
+	  		       	 	layer.open({
+	  		    			content: data.rtnMsg,
+	  		    			skin: 'msg',
+	  		    			time: 2
+	  		    		});
+	  	       	 	}
 	            }
 	       }); 
 	    }

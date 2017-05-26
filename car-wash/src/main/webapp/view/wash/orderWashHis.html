@@ -38,18 +38,22 @@ function endWash(id) {
         async: false,
         dataType: 'json',
         success:function(data){//ajax返回的数据
-        	console.log('data'+data);
        		 if(data.rtnCode==0){
-       			layer.open({
-       			    content: data.rtnMsg
-       			    ,btn: '确定'
-       			  });
-       		 }else{
-       			layer.open({
-       			    content: data.rtnMsg
-       			    ,btn: '确定'
-       			  });
-       		 }
+	       			layer.open({
+	       				content: data.rtnMsg,
+	       				skin: 'msg',
+	       				time: 2,
+	       				end: function(){
+	       					window.location.href = "${CPATH}/wash/order/forwardHis";
+	       				  }
+	       			});
+	       	 	}else{
+		       	 	layer.open({
+		    			content: data.rtnMsg,
+		    			skin: 'msg',
+		    			time: 2
+		    		});
+	       	 	}
         }
    }); 
 }
@@ -103,10 +107,18 @@ function endWash(id) {
 		                		"<p>"+
 		                    		"<label class='weui-form-preview-label'>车主</label>"+
 		                    		"<span class='weui-form-preview-value' >"+datalist[i].nick_name+"</span>"+
-		                		"</p>"+
+		                		"</p>";
+								if(datalist[i].car_number != null && datalist[i].car_number != ''){
+		                			neirong = neirong +
+			                		"<p>"+
+			                    		"<label class='weui-form-preview-label'>车牌号</label>"+
+			                    		"<span class='weui-form-preview-value' >"+datalist[i].car_number+ "</span>"+
+			                		"</p>";
+		                		}
+								neirong = neirong +
 		                		"<p>"+
-		                    		"<label class='weui-form-preview-label'>设备</label>"+
-		                    		"<span class='weui-form-preview-value' >"+datalist[i].device_name+"</span>"+
+		                    		"<label class='weui-form-preview-label'>地址</label>"+
+		                    		"<span class='weui-form-preview-value' >"+datalist[i].device_address+"("+datalist[i].device_name+")</span>"+
 		                		"</p>"+
 		                		"<p>"+
 		                    		"<label class='weui-form-preview-label'>支付金额</label>"+

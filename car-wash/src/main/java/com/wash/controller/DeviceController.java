@@ -61,7 +61,7 @@ public class DeviceController extends Controller {
 					String msg = "";
 					Date date = new Date();
 					if (command.equals("0")) { 	
-						msg = "K\n";
+						msg = "K"+PropKit.use("system_config.properties").get("duration")+"\n";
 						//更新订单洗车工及状
 						washOrdOrder.setOrderStatus(Consts.orderStatus_2);
 						washOrdOrder.setWashPersonId(memberId);
@@ -78,12 +78,13 @@ public class DeviceController extends Controller {
 						washOrdOrder.update();
 						
 						WashMember wm = WashMember.dao.findById(washOrdOrder.getCarPersonId());
-						
+						//发送待评价推送
 						String path ="http://" + getRequest().getServerName()+getRequest().getContextPath();
 						sendWeMsg(wm.getOpenId(), washOrdOrder, path);
 						
 					}else if (command.equals("2")){
-						msg = "K\n";
+						msg = "K"+PropKit.use("system_config.properties").get("duration")+"\n";
+						
 					}else if (command.equals("3")){
 						msg = "G\n";
 					}
@@ -99,9 +100,9 @@ public class DeviceController extends Controller {
 					washDeviceRecord.setCreateDate(date);
 					washDeviceRecord.setUpdateDate(date);
 					washDeviceRecord.setDelFlag(Consts.DelFlag_0);
-					washDeviceRecord.save();
 					
-					log.info("指令>>>>> " + command + "||设备>>>>> " + washDevice.getMac());
+					boolean commandFlag = sendCommand(washOrdOrder.getDeviceMac(), msg, washDeviceRecord);
+					log.info("指令>>>>> " + command + "||设备>>>>> " + washDevice.getMac()+"---------"+commandFlag);
 					
 					jsonResult.setRtnCode(0);
 					jsonResult.setRtnMsg("操作成功");
@@ -117,7 +118,7 @@ public class DeviceController extends Controller {
 	 * @param msg
 	 * @return
 	 */
-	public static boolean sendCommand(String mac,String msg){
+	public static boolean sendCommand(String mac,String msg, WashDeviceRecord washDeviceRecord){
 				
 		Channel deviceChannel = Global.deviceMap.get(mac);
 		boolean flag = false;
@@ -129,6 +130,7 @@ public class DeviceController extends Controller {
 			if (deviceChannel.isOpen()) {// 连接是否正常 发送指令
 				deviceChannel.writeAndFlush(msg);
 				flag = true;
+				washDeviceRecord.save();
 			}
 		}
 		return flag;

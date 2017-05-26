@@ -33,21 +33,23 @@
             async: false,
             dataType: 'json',
             success:function(data){//ajax返回的数据
-            	console.log('data'+data);
+           		 
            		 if(data.rtnCode==0){
-           			layer.open({
-           			    content: data.rtnMsg
-           			    ,btn: '确定'
-           			    ,yes:function(){
-           			    	pulldownRefresh();
-           			    }
-           			  });
-           		 }else{
-           			layer.open({
-           			    content: data.rtnMsg
-           			    ,btn: '确定'
-           			  });
-           		 }
+ 	       			layer.open({
+ 	       				content: data.rtnMsg,
+ 	       				skin: 'msg',
+ 	       				time: 2,
+ 	       				end: function(){
+ 	       					window.location.href = "${CPATH}/wash/order/forwardWork";
+ 	       				  }
+ 	       			});
+ 	       	 	}else{
+ 		       	 	layer.open({
+ 		    			content: data.rtnMsg,
+ 		    			skin: 'msg',
+ 		    			time: 2
+ 		    		});
+ 	       	 	}
             }
        }); 
 	}
@@ -63,18 +65,23 @@
             async: false,
             dataType: 'json',
             success:function(data){//ajax返回的数据
-            	console.log('data'+data);
+
            		 if(data.rtnCode==0){
-           			layer.open({
-           			    content: data.rtnMsg
-           			    ,btn: '确定'
-           			  });
-           		 }else{
-           			layer.open({
-           			    content: data.rtnMsg
-           			    ,btn: '确定'
-           			  });
-           		 }
+  	       			layer.open({
+  	       				content: data.rtnMsg,
+  	       				skin: 'msg',
+  	       				time: 2,
+  	       				end: function(){
+  	       					window.location.href = "${CPATH}/wash/order/forwardWork";
+  	       				  }
+  	       			});
+  	       	 	}else{
+  		       	 	layer.open({
+  		    			content: data.rtnMsg,
+  		    			skin: 'msg',
+  		    			time: 2
+  		    		});
+  	       	 	}
             }
        }); 
 	}
@@ -92,18 +99,11 @@
             success:function(data){//ajax返回的数据
             	console.log('data'+data);
            		 if(data.rtnCode==0){
-           			layer.open({
-           			    content: data.rtnMsg
-           			    ,btn: '确定'
-         			    ,yes:function(){
-             			    pulldownRefresh();
-             			 }
-           			  });
+           			layer.msg('操作成功', function(){
+           				window.location.href = "${CPATH}/wash/order/forwardWork";
+           			});
            		 }else{
-           			layer.open({
-           			    content: data.rtnMsg
-           			    ,btn: '确定'
-           			  });
+           			layer.msg('操作失败');
            		 }
             }
        }); 
@@ -150,15 +150,23 @@
 		            		"<div class='weui-form-preview-bd'>"+
 		                		"<p>"+
 		                    		"<label class='weui-form-preview-label'>车主</label>"+
-		                    		"<span class='weui-form-preview-value' >"+datalist[i].nick_name+datalist[i].car_number+"</span>"+
-		                		"</p>"+
+		                    		"<span class='weui-form-preview-value' >"+datalist[i].nick_name+"</span>"+
+		                		"</p>";
+								if(datalist[i].car_number != null && datalist[i].car_number != ''){
+		                			neirong = neirong +
+			                		"<p>"+
+			                    		"<label class='weui-form-preview-label'>车牌号</label>"+
+			                    		"<span class='weui-form-preview-value' >"+datalist[i].car_number+ "</span>"+
+			                		"</p>";
+		                		}
+								neirong = neirong +
 		                		"<p>"+
 		                    		"<label class='weui-form-preview-label'>电话</label>"+
-		                    		"<span class='weui-form-preview-value' >"+datalist[i].mobile+"</span>"+
+		                    		"<a class='weui-form-preview-value' id='mobile' href='tel:"+datalist[i].mobile+"'>"+datalist[i].mobile+"</a>"+
 		                		"</p>"+
 		                		"<p>"+
-		                    		"<label class='weui-form-preview-label'>设备</label>"+
-		                    		"<span class='weui-form-preview-value' >"+datalist[i].device_name+"</span>"+
+		                    		"<label class='weui-form-preview-label'>地址</label>"+
+		                    		"<span class='weui-form-preview-value' >"+datalist[i].device_address+"("+datalist[i].device_name+")</span>"+
 		                		"</p>"+
 		                		"<p>"+
 		                    		"<label class='weui-form-preview-label'>支付时间</label>"+

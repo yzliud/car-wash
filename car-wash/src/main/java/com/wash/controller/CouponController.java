@@ -37,11 +37,14 @@ public class CouponController extends Controller{
 		log.debug("优惠券"+couponNo+"-------"+memberId);
 		JsonResult jsonResult = new JsonResult();
 		if(!StringUtil.isBlank(couponNo)){
+			//查询优惠价信息
 			WashCouponDetail washCouponDetail = WashCouponDetail.dao.findFirst(
 					"select * from wash_coupon_detail where coupon_no = ? "
 					, couponNo);
 			if(null != washCouponDetail){
+				//判断是否可以领取
 				if(!StringUtil.isBlank(washCouponDetail.getStatus()) && washCouponDetail.getStatus().equals(Consts.CouponStatus_0)){
+					//更新领取记录
 					int count = Db.update("update wash_coupon_detail set member_id = ?, status = 1, update_date = now() where coupon_no = ? and status = 0 "
 							, memberId, couponNo);
 					if(count > 0){
@@ -76,13 +79,13 @@ public class CouponController extends Controller{
 		String select = "select * ";
 		Page<WashCouponDetail> wcdList = null;
 		if(!StringUtil.isBlank(counStatus)){
-			if(counStatus.equals(Consts.CouponStatus_1)){
+			if(counStatus.equals(Consts.CouponStatus_1)){//未使用
 				from = " from wash_coupon_detail where member_id = ? and status = 1 and failure_time > now() ";
 				wcdList = WashCouponDetail.dao.paginate(pageNumber, Consts.PageSize, select, from, memberId);
-			}else if(counStatus.equals(Consts.CouponStatus_2)){
+			}else if(counStatus.equals(Consts.CouponStatus_2)){//已使用
 				from = " from wash_coupon_detail where member_id = ? and status = 2 ";
 				wcdList = WashCouponDetail.dao.paginate(pageNumber, Consts.PageSize, select, from, memberId);
-			}else if(counStatus.equals(Consts.CouponStatus_9)){
+			}else if(counStatus.equals(Consts.CouponStatus_9)){//已失效
 				from = " from wash_coupon_detail where member_id = ? and status = 1 and now() > failure_time ";
 				wcdList = WashCouponDetail.dao.paginate(pageNumber, Consts.PageSize, select, from, memberId);
 			}

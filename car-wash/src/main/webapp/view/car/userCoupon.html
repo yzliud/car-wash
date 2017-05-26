@@ -53,18 +53,23 @@ function update(){
 	        async: false,
 	        dataType: 'json',
 	        success:function(data){//ajax返回的数据
-	        	console.log('data'+data);
-	       		 if(data.rtnCode==0){
-	       			layer.open({
-	       			    content: data.rtnMsg
-	       			    ,btn: '确定'
-	       			  });
-	       	 	}else{
-	       	 	layer.open({
-	   			    content: data.rtnMsg
-	   			    ,btn: '确定'
-	   			  });
-	       	 	}
+	       		 
+	       		if(data.rtnCode==0){
+           			layer.open({
+           				content: data.rtnMsg,
+           				skin: 'msg',
+           				time: 2,
+           				end: function(){
+           					window.location.href = "${CPATH}/car/member/forwardUserCenter";
+           				  }
+           			});
+           	 	}else{
+    	       	 	layer.open({
+    	    			content: data.rtnMsg,
+    	    			skin: 'msg',
+    	    			time: 2
+    	    		});
+           	 	}
 	        }
 	   }); 
 	}

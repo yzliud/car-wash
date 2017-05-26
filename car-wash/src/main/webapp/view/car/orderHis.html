@@ -7,7 +7,7 @@
 		<link rel="stylesheet" href="${SPATH}/css/weui.css"/>
 		<link rel="stylesheet" href="${SPATH}/css/weui2.css"/>
 		  <link rel="stylesheet" href="${SPATH}/layer.mobile-v2.0/layer_mobile/need/layer.css">
-		<title></title>
+		<title>我的订单</title>
 	</head>
 <body style="background-color: #efeff4;">
 	<div id="pullrefresh" class="mui-content mui-scroll-wrapper" >
@@ -36,21 +36,23 @@
 		            async: false,
 		            dataType: 'json',
 		            success:function(data){//ajax返回的数据
-		           		 if(data.rtnCode==0){
+		            
+		           		if(data.rtnCode==0){
 		           			layer.open({
-		           			    content: data.rtnMsg
-		           			    ,btn: '确定'
-		           			    ,yes: function(index){
-		           			    	window.location.reload();
-		           			    }
-		           			  });
-		           			
-		           		 }else{
-		           			layer.open({
-		           			    content: data.rtnMsg
-		           			    ,btn: '确定'
-		           			  });
-		           		 }
+		           				content: data.rtnMsg,
+		           				skin: 'msg',
+		           				time: 2,
+		           				end: function(){
+		           					window.location.reload();
+		           				  }
+		           			});
+		           	 	}else{
+		    	       	 	layer.open({
+		    	    			content: data.rtnMsg,
+		    	    			skin: 'msg',
+		    	    			time: 2
+		    	    		});
+		           	 	}
 		            }
 		       });
 		    }
@@ -68,15 +70,16 @@
 	        async: false,
 	        //dataType: 'json',
 	        success:function(data){//ajax返回的数据
-	        	console.log('data'+data);
-	       		 if(data.rtnCode==0){
+	       		 
+	       		if(data.rtnCode==0){
 	       			window.location.href = "${CPATH}/car/order/topay?order_id="+id;
-	       	 	}else{
-	       	 	layer.open({
-	   			    content: data.rtnMsg
-	   			    ,btn: '确定'
-	   			  });
-	       	 	}
+           	 	}else{
+    	       	 	layer.open({
+    	    			content: data.rtnMsg,
+    	    			skin: 'msg',
+    	    			time: 2
+    	    		});
+           	 	}
 	        }
 	   }); 
 	}
@@ -130,8 +133,8 @@
 		                		"</p>"+
 		                		
 		                		"<p>"+
-		                    		"<label class='weui-form-preview-label'>设备</label>"+
-		                    		"<span class='weui-form-preview-value' >"+datalist[i].device_name+"</span>"+
+		                    		"<label class='weui-form-preview-label'>地址</label>"+
+		                    		"<span class='weui-form-preview-value' >"+datalist[i].device_address+"("+datalist[i].device_name+")</span>"+
 		                		"</p>"+
 		                		"<p>"+
 		                    		"<label class='weui-form-preview-label'>支付金额</label>"+
@@ -171,12 +174,14 @@
 			            			"<p>"+
 			                    		"<label class='weui-form-preview-label'>评价级别</label>"+
 			                    		"<span class='weui-form-preview-value' >"+datalist[i].evaluate_flag_value+"</span>"+
-			                		"</p>"+
-			                		"<p>"+
-			                    		"<label class='weui-form-preview-label' style='height: 28px;'>评价内容</label>"+
-			                    		"<span class='weui-form-preview-value' >"+datalist[i].evaluate+ "</span>"+
-			                		"</p>"
-			                		;
+			                		"</p>";
+			                		if(datalist[i].evaluate != null && datalist[i].evaluate != ''){
+			                			neirong = neirong +
+				                		"<p>"+
+				                    		"<label class='weui-form-preview-label' style='height: 28px;'>评价内容</label>"+
+				                    		"<span class='weui-form-preview-value' >"+datalist[i].evaluate+ "</span>"+
+				                		"</p>";
+			                		}
 			            			if(datalist[i].evaluate_status=="1"){
 			            				neirong = neirong +
 				                		"<p>"+

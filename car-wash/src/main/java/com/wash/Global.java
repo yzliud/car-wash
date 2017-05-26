@@ -2,10 +2,7 @@ package com.wash;
 
 import io.netty.channel.Channel;
 import io.netty.channel.EventLoopGroup;
-
-import java.net.Socket;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class Global {

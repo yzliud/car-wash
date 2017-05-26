@@ -35,31 +35,43 @@
 <script src="${SPATH}/layer.mobile-v2.0/layer_mobile/layer.js"></script>
 <script>
 function appraise(){
-	$.ajax({
-        url:"${CPATH}/car/order/appraise",
-        data:{
-        	"evaluate": $("#evaluate").val(),
-        	"orderId": $("#order_id").val()
-        },
-        type:"post",
-        async: false,
-        //dataType: 'json',
-        success:function(data){//ajax返回的数据
-        	console.log('data'+data);
-       		 if(data.rtnCode==0){
-       			layer.open({
-       			    content: data.rtnMsg
-       			    ,btn: '确定'
-       			  });
-       			window.location.href = "${CPATH}/car/order/forward";
-       	 	}else{
-       	 	layer.open({
-   			    content: data.rtnMsg
-   			    ,btn: '确定'
-   			  });
-       	 	}
-        }
-   }); 
+	var evaluate = $("#evaluate").val();
+	if(evaluate == "") {
+		layer.open({
+			content: '请输入评价内容',
+			skin: 'msg',
+			time: 2
+		});
+	}else{
+		$.ajax({
+	        url:"${CPATH}/car/order/appraise",
+	        data:{
+	        	"evaluate": $("#evaluate").val(),
+	        	"orderId": $("#order_id").val()
+	        },
+	        type:"post",
+	        async: false,
+	        //dataType: 'json',
+	        success:function(data){//ajax返回的数据
+	       		if(data.rtnCode==0){
+	       			layer.open({
+	       				content: data.rtnMsg,
+	       				skin: 'msg',
+	       				time: 2,
+	       				end: function(){
+	       					window.location.href = "${CPATH}/car/order/forward";
+	       				  }
+	       			});
+	       	 	}else{
+		       	 	layer.open({
+		    			content: data.rtnMsg,
+		    			skin: 'msg',
+		    			time: 2
+		    		});
+	       	 	}
+	        }
+	   });
+	}
 }
 </script>
 

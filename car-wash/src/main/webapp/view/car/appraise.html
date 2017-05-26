@@ -76,21 +76,21 @@ function appraise(){
         async: false,
         //dataType: 'json',
         success:function(data){//ajax返回的数据
-        	console.log('data'+data);
-       		 if(data.rtnCode==0){
+        	if(data.rtnCode==0){
        			layer.open({
-       			    content: data.rtnMsg
-       			    ,btn: '确定'
-       			    	,yes: function(index){
-       			    		window.location.href = "${CPATH}/car/order/forward";
-           			    }
-       			  });
-       			
+       				content: data.rtnMsg,
+       				skin: 'msg',
+       				time: 2,
+       				end: function(){
+       					window.location.href = "${CPATH}/car/order/forward";
+       				  }
+       			});
        	 	}else{
-       	 	layer.open({
-   			    content: data.rtnMsg
-   			    ,btn: '确定'
-   			  });
+	       	 	layer.open({
+	    			content: data.rtnMsg,
+	    			skin: 'msg',
+	    			time: 2
+	    		});
        	 	}
         }
    }); 

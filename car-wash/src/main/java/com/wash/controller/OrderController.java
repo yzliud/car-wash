@@ -1,5 +1,7 @@
 package com.wash.controller;
 
+import io.netty.channel.Channel;
+
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -22,6 +24,7 @@ import com.samehope.plugin.wechat.WechatKit;
 import com.samehope.plugin.wechat.jspay.WechatPay;
 import com.samehope.plugin.wechat.model.WechatConfig;
 import com.wash.Consts;
+import com.wash.Global;
 import com.wash.model.WashCompanyPurse;
 import com.wash.model.WashCouponDetail;
 import com.wash.model.WashDevice;
@@ -112,25 +115,27 @@ public class OrderController extends Controller{
 		woo.setCreateDate(date);
 		woo.setUpdateDate(date);
 		woo.setDelFlag("0");
-		woo.save();
+		boolean flag = woo.save();
 		
-		//更新优惠价使用信息
-		if(washCouponDetail != null){
-			washCouponDetail.setOrderNo(orderNo);
-			washCouponDetail.update();
+		if(flag){
+			//更新优惠价使用信息
+			if(washCouponDetail != null){
+				washCouponDetail.setOrderNo(orderNo);
+				washCouponDetail.update();
+			}
+			//发起支付
+			Map<String,String> map = new HashMap<String,String>();
+			map.put("orderId", orderNo);
+			map.put("payMoney", realFee.doubleValue()+"");
+			map.put("controllerKey", "/car/order");
+			map.put("methodName", "forward");
+			WechatConfig wechatConfig = WechatConfig.getWechatConfig(PropKit.use("wx_config.properties").get("appid")
+					, PropKit.use("wx_config.properties").get("secret")
+					, PropKit.use("wx_config.properties").get("partner")
+					, PropKit.use("wx_config.properties").get("partnerkey")
+					, openId);
+			WechatKit.toJspayOuth2(wechatConfig, map, getRequest(), getResponse());
 		}
-		//发起支付
-		Map<String,String> map = new HashMap<String,String>();
-		map.put("orderId", orderNo);
-		map.put("payMoney", realFee.doubleValue()+"");
-		map.put("controllerKey", "/car/order");
-		map.put("methodName", "forward");
-		WechatConfig wechatConfig = WechatConfig.getWechatConfig(PropKit.use("wx_config.properties").get("appid")
-				, PropKit.use("wx_config.properties").get("secret")
-				, PropKit.use("wx_config.properties").get("partner")
-				, PropKit.use("wx_config.properties").get("partnerkey")
-				, openId);
-		WechatKit.toJspayOuth2(wechatConfig, map, getRequest(), getResponse());
 	}
 	
 	/**
@@ -241,7 +246,7 @@ public class OrderController extends Controller{
 		String from = " ";
 		Page<Record> recordList = null;
 		
-		select = " SELECT a.id,a.order_no,a.real_fee,a.order_time,a.pay_time,a.end_time,b.name device_name,c.nick_name,d.flag evaluate_flag,d.status evaluate_status,d.evaluate,d.add_evaluate,a.order_status "
+		select = " SELECT a.id,a.order_no,a.real_fee,a.order_time,a.pay_time,a.end_time,b.name device_name,b.address device_address,c.nick_name,d.flag evaluate_flag,d.status evaluate_status,d.evaluate,d.add_evaluate,a.order_status "
 				+" ,CASE a.order_status WHEN 0 THEN '待付款'  WHEN 1 THEN '等待洗车' WHEN 2 THEN  '洗车中' WHEN 3 THEN  '待评价' WHEN 9 THEN  '已完结' ELSE '' END order_status_value "
 				+" ,CASE d.flag WHEN 0 THEN '好评'  WHEN 1 THEN '中评' WHEN 2 THEN  '差评' ELSE '' END evaluate_flag_value "
 				;
@@ -373,8 +378,14 @@ public class OrderController extends Controller{
 					jsonResult.setRtnCode(3);
 					jsonResult.setRtnMsg("洗车工没有上班，请稍后");
 				}else{
-					jsonResult.setRtnCode(0);
-					jsonResult.setRtnMsg("操作成功");
+					Channel deviceChannel = Global.deviceMap.get(deviceMac);
+					if(null == deviceChannel){
+						jsonResult.setRtnCode(4);
+						jsonResult.setRtnMsg("设备维护中");
+					}else{
+						jsonResult.setRtnCode(0);
+						jsonResult.setRtnMsg("操作成功");
+					}
 				}
 			}
 		}

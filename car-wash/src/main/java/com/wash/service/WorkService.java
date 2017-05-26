@@ -2,7 +2,9 @@ package com.wash.service;
 
 import java.util.Date;
 
+import com.jfinal.aop.Before;
 import com.jfinal.plugin.activerecord.Db;
+import com.jfinal.plugin.activerecord.tx.Tx;
 import com.samehope.common.utils.UuidUtils;
 import com.wash.Consts;
 import com.wash.model.WashDevice;
@@ -11,7 +13,8 @@ import com.wash.model.WashWorkPerson;
 
 public class WorkService {
 	
-	public static boolean startWork(WashDevice washDevice,String memberId){
+	@Before(Tx.class)
+	public boolean startWork(WashDevice washDevice,String memberId){
 		
 		Date date = new Date();
 		

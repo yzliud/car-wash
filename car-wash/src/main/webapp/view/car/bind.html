@@ -2,7 +2,7 @@
 <html lang="zh">
 <head>
   <meta charset="UTF-8">
-  <title>绑定</title>
+  <title>用户注册</title>
   <meta name="renderer" content="webkit">
   <meta name="force-rendering" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=Edge">
@@ -53,9 +53,14 @@
 	//校验手机号是否合法
 	function isPhoneNum() {
 		var phonenum = $("#mobile").val();
-		var myreg = /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1}))+\d{8})$/;
+		var myreg = /^(((13[0-9]{1})|(15[0-9]{1})|(17[0-9]{1})|(18[0-9]{1}))+\d{8})$/;
 		if (!myreg.test(phonenum)) {
 			alert('请输入合法手机号!');
+			layer.open({
+    			content: '请输入合法手机号!',
+    			skin: 'msg',
+    			time: 2
+    		});
 			return false;
 		} else {
 			return true;
@@ -113,13 +118,23 @@
 	            	 },
 	             dataType: "json",
 	             success: function(data){
-	            	/* var btnArray = [ '确定' ]; */
+
 	            	if(data.rtnCode==0){
-	            		alert(data.rtnMsg);
-	            		window.location.href = "${CPATH}/car/order/forwardOrder?device_mac="+$("#device_mac").val();
-	            	}else{
-	            		alert(data.rtnMsg);
-	            	}
+	           			layer.open({
+	           				content: data.rtnMsg,
+	           				skin: 'msg',
+	           				time: 2,
+	           				end: function(){
+	           					window.location.href = "${CPATH}/car/order/forwardOrder?device_mac="+$("#device_mac").val();
+	           				  }
+	           			});
+	           	 	}else{
+	    	       	 	layer.open({
+	    	    			content: data.rtnMsg,
+	    	    			skin: 'msg',
+	    	    			time: 2
+	    	    		});
+	           	 	}
 	             }
 	         });
 		}	

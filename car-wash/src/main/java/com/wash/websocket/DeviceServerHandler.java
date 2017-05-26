@@ -25,7 +25,7 @@ public class DeviceServerHandler extends ChannelInboundHandlerAdapter {
 			String body = msg.toString();
 			log.info("DeviceServerHandler::::‘BODY’ from device client:" + body);
 			//接收心跳	
-			if(body.length() > 2){
+			if(body.length() == 8){
 
 				log.info("接收心跳...........");
 				List<Object> paramsList = new ArrayList<Object>();
