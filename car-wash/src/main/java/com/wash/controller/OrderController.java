@@ -56,6 +56,22 @@ public class OrderController extends Controller{
 				setAttr("washMember", washMember);
 				WashSetMeal wsm = WashSetMeal.dao.findFirst(" select * from wash_set_meal order by update_time desc ");
 				setAttr("washSetMealData",wsm);
+				
+				BigDecimal totalFee = wsm.getSalePrice();
+				BigDecimal discountFee = BigDecimal.ZERO;
+				//优惠卷
+				WashCouponDetail washCouponDetail = WashCouponDetail.dao.findFirst(
+						"select * from wash_coupon_detail where member_id = ? and status = 1 and now() between effective_time and failure_time ORDER BY discount_amount DESC,failure_time "
+						, washMember.getId()); 
+				if(washCouponDetail != null){
+					discountFee = washCouponDetail.getDiscountAmount();
+				}
+				
+				BigDecimal realFee = totalFee.subtract(discountFee);
+				
+				setAttr("totalFee", totalFee);
+				setAttr("discountFee", discountFee);
+				setAttr("realFee", realFee);
 				setAttr("device_mac",mac);
 				render("order.html");
 			}
@@ -68,6 +84,7 @@ public class OrderController extends Controller{
 	public void pay(){
 		log.info("支付");
 		String setMealId = getPara("set_meal_id");
+		String cardNum = getPara("car_name");
 		//套餐信息
 		WashSetMeal wsm = WashSetMeal.dao.findFirst(" select * from wash_set_meal where id = ? ", setMealId);
 		String deviceMac = getPara("device_mac");
@@ -78,16 +95,20 @@ public class OrderController extends Controller{
 		String memberId = (String)getSessionAttr("memberIdSession");
 		String openId = (String)getSessionAttr("openIdSession");
 		
+		WashMember wm = WashMember.dao.findFirst("select * from wash_member WHERE open_id = ? ", openId);
+		wm.setCardNum(cardNum);
+		wm.update();
+		setSessionAttr("memberDataSession", wm);
+		
 		//优惠卷
 		WashCouponDetail washCouponDetail = WashCouponDetail.dao.findFirst(
-				"select * from wash_coupon_detail where member_id = ? and status = 1 and now() between effective_time and failure_time"
+				"select * from wash_coupon_detail where member_id = ? and status = 1 and now() between effective_time and failure_time ORDER BY discount_amount DESC,failure_time "
 				, memberId); 
-		BigDecimal discountFee = BigDecimal.valueOf(0);
+		BigDecimal discountFee = BigDecimal.ZERO;
 		if(washCouponDetail != null){
 			discountFee = washCouponDetail.getDiscountAmount();
 		}
 		BigDecimal realFee = totalFee.subtract(discountFee);
-		
 		
 		Date date = new Date();
 		//订单编号
@@ -115,27 +136,42 @@ public class OrderController extends Controller{
 		woo.setCreateDate(date);
 		woo.setUpdateDate(date);
 		woo.setDelFlag("0");
-		boolean flag = woo.save();
-		
-		if(flag){
-			//更新优惠价使用信息
+		boolean flag = false;
+		if(realFee.compareTo(BigDecimal.ZERO) == 1){
+			flag = woo.save();
+			if(flag){
+				//更新优惠价使用信息
+				if(washCouponDetail != null){
+					washCouponDetail.setOrderNo(orderNo);
+					washCouponDetail.update();
+				}
+				//发起支付
+				Map<String,String> map = new HashMap<String,String>();
+				map.put("orderId", orderNo);
+				map.put("payMoney", realFee.doubleValue()+"");
+				map.put("controllerKey", "/car/order");
+				map.put("methodName", "forward");
+				WechatConfig wechatConfig = WechatConfig.getWechatConfig(PropKit.use("wx_config.properties").get("appid")
+						, PropKit.use("wx_config.properties").get("secret")
+						, PropKit.use("wx_config.properties").get("partner")
+						, PropKit.use("wx_config.properties").get("partnerkey")
+						, openId);
+				WechatKit.toJspayOuth2(wechatConfig, map, getRequest(), getResponse());
+			}
+		}else{
+			woo.setRealFee(BigDecimal.ZERO);
+			woo.setPayTime(date);
+			woo.setOrderStatus(Consts.orderStatus_1);
+			flag = woo.save();
 			if(washCouponDetail != null){
 				washCouponDetail.setOrderNo(orderNo);
+				washCouponDetail.setStatus(Consts.CouponStatus_2);
 				washCouponDetail.update();
 			}
-			//发起支付
-			Map<String,String> map = new HashMap<String,String>();
-			map.put("orderId", orderNo);
-			map.put("payMoney", realFee.doubleValue()+"");
-			map.put("controllerKey", "/car/order");
-			map.put("methodName", "forward");
-			WechatConfig wechatConfig = WechatConfig.getWechatConfig(PropKit.use("wx_config.properties").get("appid")
-					, PropKit.use("wx_config.properties").get("secret")
-					, PropKit.use("wx_config.properties").get("partner")
-					, PropKit.use("wx_config.properties").get("partnerkey")
-					, openId);
-			WechatKit.toJspayOuth2(wechatConfig, map, getRequest(), getResponse());
+			forwardAction("/car/order/forward");
 		}
+		
+		
 	}
 	
 	/**
@@ -169,12 +205,15 @@ public class OrderController extends Controller{
 	public void payBack(){
 		log.info("支付回调");
 		
-		Map<String, String> checkPayResult = WechatPay.checkPayResult(getRequest());
-		String rtnCode = checkPayResult.get("rtnCode");
-		String rtnMsg = checkPayResult.get("rtnMsg");
-		String transactionId = checkPayResult.get("transactionId");
-		String orderId = checkPayResult.get("orderId");
-		
+//		Map<String, String> checkPayResult = WechatPay.checkPayResult(getRequest());
+//		String rtnCode = checkPayResult.get("rtnCode");
+//		String rtnMsg = checkPayResult.get("rtnMsg");
+//		String transactionId = checkPayResult.get("transactionId");
+//		String orderId = checkPayResult.get("orderId");
+		String rtnCode = getPara("rtnCode");
+		String rtnMsg = getPara("rtnMsg");
+		String transactionId = getPara("transactionId");
+		String orderId = getPara("orderId");
 		log.info("rtnCode===="+rtnCode);
 		log.info("rtnMsg===="+rtnMsg);
 		//验签通过
@@ -221,7 +260,7 @@ public class OrderController extends Controller{
 					wcp.setPay(new BigDecimal(0));
 					wcp.setBalance(balance.add(income));
 					//更新优惠卷使用信息
-					Db.update("update wash_coupon_detail set status = 2, update_time = now() where order_no = ? ", orderId);
+					Db.update("update wash_coupon_detail set status = 2, update_date = now() where order_no = ? ", orderId);
 				}
 				if(rtnFlag){
 					log.info("向微信服务器告知支付成功!!!!!!");

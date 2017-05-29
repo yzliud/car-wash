@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
     <title>个人优惠卷</title>
     <link rel="stylesheet" href="${SPATH}/css/mui.min.css">
-    <link rel="stylesheet" href="${SPATH}/css/coupon.css">
     <link rel="stylesheet" href="${SPATH}/weui/weui.css">
     <link rel="stylesheet" href="${SPATH}/weui/example.css">
     <link rel="stylesheet" href="${SPATH}/layer.mobile-v2.0/layer_mobile/need/layer.css">
@@ -94,26 +93,29 @@ $(function(){
  					mui('#pullrefresh').pullRefresh().endPullupToRefresh((datalist.length == 0)); //参数为true代表没有更多数据了。
  						for(var i = 0; i < datalist.length; i++) {
  						var div = document.createElement('div');
- 						div.className = '';
- 						div.style = '';	
-						var neirong = ""; 
+ 						div.className = 'weui-form-preview';
+ 						div.style = 'margin-top: 10px;';	
+						var neirong = 
+							"<div class='row'>"+
+							 	" <div class='col-md-3 col-sm-6 col-xs-12'>";
 							 	if($("#status").val() == '1'){
-							 		neirong = neirong +"   <div class='stamp stamp04'> "
-						          +"  <div class='par'><p>"+datalist[i].coupon_name+"</p><sub class='sign'>￥</sub><span>"+datalist[i].discount_amount+"</span><sub>抵用券</sub><p></p></div> "
-						          +"  <div class='copy'>副券<p>"+datalist[i].effective_time.substring(0,10)+"<br>"+datalist[i].failure_time.substring(0,10)+"</p></div> "
-						          +"  </div> ";
+							 		neirong = neirong +"   <div class='info-box bg-yellow' style='margin-bottom: 0px;'>"+
+						          "  <span class='info-box-icon'><i class='fa fa-automobile'></i></span>";
  								}else if($("#status").val() == '9'){
- 									neirong = neirong +"   <div class='stamp stamp02'> "
- 							          +"  <div class='par'><p>"+datalist[i].coupon_name+"</p><sub class='sign'>￥</sub><span>"+datalist[i].discount_amount+"</span><sub>抵用券</sub><p></p></div> "
- 							          +"  <div class='copy'>副券<p>"+datalist[i].effective_time.substring(0,10)+"<br>"+datalist[i].failure_time.substring(0,10)+"</p></div> "
- 							          +"  </div> ";
+ 									neirong = neirong +"   <div class='info-box bg-red' style='margin-bottom: 0px;'>"+
+ 							          "  <span class='info-box-icon'><i class='fa fa-automobile'></i></span>";
  								}else{
- 									neirong = neirong +"   <div class='stamp stamp03'> "
- 							          +"  <div class='par'><p>"+datalist[i].coupon_name+"</p><sub class='sign'>￥</sub><span>"+datalist[i].discount_amount+"</span><sub>抵用券</sub><p></p></div> "
- 							          +"  <div class='copy'>副券<p>"+datalist[i].effective_time.substring(0,10)+"<br>"+datalist[i].failure_time.substring(0,10)+"</p></div> "
- 							          +"  </div> ";
+ 									neirong = neirong +"   <div class='info-box bg-green' style='margin-bottom: 0px;'>"+
+							          "  <span class='info-box-icon'><i class='fa fa-automobile'></i></span>";
 								}
-
+ 						neirong = neirong + "  <div class='info-box-content'>"+
+						           "   <span class='info-box-text'> "+datalist[i].coupon_name+"</span>"+
+						           "   <span class='info-box-number'> 抵用金额："+datalist[i].discount_amount+"元</span>"+
+						                "  <span class='progress-description'>有效期："+datalist[i].effective_time.substring(0,10)+" 到  "+datalist[i].failure_time.substring(0,10)+"</span>"+
+						            "</div>"+
+						         " </div>"+
+						        "</div>"+
+							" </div>";
 
 		            		div.innerHTML = neirong;
 						
