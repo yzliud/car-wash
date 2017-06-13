@@ -22,7 +22,10 @@
 <script src="${SPATH}/layer.mobile-v2.0/layer_mobile/layer.js"></script>
 <script type="text/javascript" charset="utf-8">
 
+	var index;
+	var three = 0;
 	function startWash(id) {
+
     	$.ajax({
             url:"${CPATH}/wash/device/deviceCommand",
             data:{
@@ -35,14 +38,12 @@
             success:function(data){//ajax返回的数据
            		 
            		 if(data.rtnCode==0){
- 	       			layer.open({
- 	       				content: data.rtnMsg,
- 	       				skin: 'msg',
- 	       				time: 2,
- 	       				end: function(){
- 	       					window.location.href = "${CPATH}/wash/order/forwardWork";
- 	       				  }
- 	       			});
+           			index = layer.open({
+           			    type: 2
+           			    ,content: '加载中'
+           			  });;
+           			checkDeviceCommond(id,'0');	
+ 	       			
  	       	 	}else{
  		       	 	layer.open({
  		    			content: data.rtnMsg,
@@ -52,6 +53,66 @@
  	       	 	}
             }
        }); 
+	}
+	
+	function checkDeviceCommond(orderId, type){
+		$.ajax({
+			type : "get",
+			url : "${CPATH}/wash/device/checkDeviceCommond",
+			dataType : "JSON",
+			data : {
+				"order_id" : orderId,
+				"type" : type
+			},
+			success : function(data) {
+				if(data.rtnCode==0){
+					layer.close(index);
+					layer.open({
+ 	       				content: data.rtnMsg,
+ 	       				skin: 'msg',
+ 	       				time: 2,
+ 	       				end: function(){
+ 	       					window.location.href = "${CPATH}/wash/order/forwardWork";
+ 	       				  }
+ 	       			});
+				}else{
+					setTimeout(function() {
+						++three;
+						if(three==60){
+							three=0;
+							layer.close(index);
+							layer.open({
+		 		    			content: "请求失败，请稍后再试",
+		 		    			skin: 'msg',
+		 		    			time: 2
+		 		    		});
+						}else{
+							if(three==20||three==40){
+								checkDeviceCommond(orderId,'1');
+							}else{
+								checkDeviceCommond(orderId,'0');		
+							}					
+						}	
+					}, 500)
+				}
+			},
+			error: function (XMLHttpRequest, textStatus, errorThrown) {  
+				setTimeout(function() {
+					++three;
+					if(three==60){
+						three=0;
+						layer.msg("请求失败，请稍后再试");
+						layer.close(index);
+					}else{
+						if(three==20||three==40){
+							checkDeviceCommond(orderId,'1');
+						}else{
+							checkDeviceCommond(orderId,'0');		
+						}					
+					}	
+				}, 500)
+			} 
+		});
 	}
 
 	function endWash(id) {
@@ -97,14 +158,20 @@
             async: false,
             dataType: 'json',
             success:function(data){//ajax返回的数据
-            	console.log('data'+data);
-           		 if(data.rtnCode==0){
-           			layer.msg('操作成功', function(){
-           				window.location.href = "${CPATH}/wash/order/forwardWork";
-           			});
-           		 }else{
-           			layer.msg('操作失败');
-           		 }
+            	if(data.rtnCode==0){
+           			index = layer.open({
+           			    type: 2
+           			    ,content: '加载中'
+           			  });
+           			checkDeviceCommond(id,'0');	
+ 	       			
+ 	       	 	}else{
+ 		       	 	layer.open({
+ 		    			content: data.rtnMsg,
+ 		    			skin: 'msg',
+ 		    			time: 2
+ 		    		});
+ 	       	 	}
             }
        }); 
 	}
