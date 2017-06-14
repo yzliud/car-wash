@@ -27,7 +27,7 @@
 </head>
 <body class="hold-transition  sidebar-mini">
 <form id="editForm" method="post" action="${CPATH}/car/order/pay">
-<div class="wrapper">
+<div class="wrapper" style="overflow-x:hidden">
 
  <div class="col-xs-12" style="padding-left: 0px;padding-right: 0px;">
           <div class="box box-solid" style="margin-bottom: 0px;">
@@ -35,7 +35,7 @@
               <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
                 <div class="carousel-inner">
                   <div class="item active">
-                    <img src="http://placehold.it/900x500/39CCCC/ffffff&text=I+Love+Bootstrap" alt="First slide">
+                    <img src="${SPATH}/img/logo.png" alt="First slide">
 
                     <div class="carousel-caption">
                       
@@ -51,12 +51,12 @@
           </div>
         </div>
 
-</div>
+
 <div class="weui-cells__title">手机号</div>
         <div class="weui-cells">
             <div class="weui-cell">
                 <div class="weui-cell__bd">
-                    <input class="weui-input" type="text" id="mobile" name="mobile" value="${washMember.mobile!}" readonly/>
+                    <input class="weui-input" type="text" id="mobile" name="mobile" value="${washMember.mobile!}" />
                 </div>
             </div>
         </div>
@@ -68,25 +68,40 @@
                 </div>
             </div>
         </div>
+
+<div class="weui-cells" style="margin-top: 0px;">
+            <div class="weui-cell weui-cell_select weui-cell_select-after">
+                <div class="weui-cell__hd">
+                    <label for="" class="weui-label">优惠券</label>
+                </div>
+                <div class="weui-cell__bd">
+                    <select class="weui-select" name="coupon_id" id="coupon_id">
+                    <#if wcdList??>
+					<#list wcdList as x>
+                        <option value="${x.id!}">${x.couponName!}:${x.discountAmount!0}元</option>
+                     </#list>
+				</#if>	
+                    </select>
+                </div>
+            </div>
+        </div>
+
 <div class="row" style="margin-top: 10px;">
 				 	 <div class="col-md-3 col-sm-6 col-xs-12">
 			          <div class="info-box ">
 			            <span class="info-box-icon"><i class="fa fa-shopping-cart"></i></span>
 			
 			            <div class="info-box-content">
-			              <span class="info-box-text"> ${washSetMealData.name!} ${washSetMealData.salePrice!0}元</span>
-			              <span class="info-box-number"> 总计：${realFee!0}元</span>
-			
-			
-			                  <span class="progress-description">
-			                    抵用金额：${discountFee!0}元
-			                  </span>
+			              <span class="info-box-number"> 总计：${totalFee!0}元</span>
 			            </div>
 			          </div>
 			        </div>
 				 </div>
-         <div style="width: 100%;position: fixed; bottom: 0px;font-weight: bold;text-align: center;background-color: #00a7d0;color: white; border: 1px solid #00a7d0;height:50px;line-height:50px;margin: auto;margin-top: 30px" onclick="topay()">确认付款</div>
 
+
+
+         <div style="width: 100%;position: fixed; bottom: 0px;font-weight: bold;text-align: center;background-color: #00a7d0;color: white; border: 1px solid #00a7d0;height:50px;line-height:50px;margin: auto;margin-top: 30px" onclick="topay()">确认付款</div>
+</div>
  <input type="hidden" id="set_meal_id" name="set_meal_id" value="${washSetMealData.id!}"> 
 <input type="hidden" id="device_mac" name="device_mac" value="${device_mac!}">
 
