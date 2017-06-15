@@ -1,0 +1,281 @@
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  font: inherit;
+  font-size: 100%;
+}
+html {
+  -ms-text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
+  font-family: "Microsoft YaHei", "SimSun", Verdana, Arial, Helvetica, sans-serif;
+  width: 100%;
+  min-height: 100%;
+}
+body {
+  -webkit-backface-visibility: hidden;
+  font-family: "Microsoft YaHei", "SimSun", Verdana, Arial, Helvetica, sans-serif;
+  -webkit-text-size-adjust: none;
+  background: #fff;
+  width: 100%;
+  height: 100%;
+}
+html,
+body {
+  font-size: 24px;
+  color: #333;
+}
+ol,
+ul {
+  list-style: none outside none;
+}
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+caption,
+th,
+td {
+  font-weight: normal;
+  vertical-align: middle;
+}
+q,
+blockquote {
+  quotes: none;
+}
+q:before,
+q:after,
+blockquote:before,
+blockquote:after {
+  content: "";
+  content: none;
+}
+a {
+  color: #333;
+  background: transparent;
+  text-decoration: none;
+}
+a img {
+  border: none;
+}
+img {
+  vertical-align: middle ;
+  border: 0;
+}
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+menu,
+nav,
+section,
+summary {
+  display: block;
+}
+button,
+input[type='number'],
+input[type='text'],
+input[type='password'],
+input[type='email'],
+select,
+textarea {
+  font-family: "Microsoft YaHei", "SimSun", Verdana, Arial, Helvetica, sans-serif;
+  /* font-size: 100%; */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+div,
+h1,
+p,
+ul,
+li,
+label,
+textarea,
+span {
+  word-break: break-all;
+}
+div,
+h1,
+p,
+ul,
+li,
+label,
+textarea,
+input,
+button,
+form {
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+input,
+textarea {
+  border: 0 none;
+  outline: none;
+}
+input,
+select,
+textarea {
+  font-family: "Microsoft YaHei", "SimSun", Verdana, Arial, Helvetica, sans-serif;
+}
+input,
+select,
+button {
+  border: none;
+  outline: none;
+  vertical-align: middle;
+  background: transparent;
+}
+input::-ms-clear {
+  display: none;
+}
+input::-ms-reveal {
+  display: none;
+}
+input::-webkit-search-cancel-button {
+  display: none;
+}
+input[type="button"],
+input[type="submit"],
+input[type="reset"] {
+  -webkit-appearance: none;
+}
+textarea {
+  resize: none;
+}
+.on-left {
+  float: left;
+}
+.on-right {
+  float: right;
+}
+.elipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.clearfix {
+  *zoom: 1;
+}
+.clearfix:before,
+.clearfix:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+.padding-none {
+  padding: 0px !important;
+}
+.orange {
+  color: #ff8309 !important;
+}
+/*
+* icon图标
+*/
+.icon-16 {
+  display: inline-block;
+  *display: inline;
+  *zoom: 1;
+  vertical-align: middle;
+  width: 16px;
+  height: 16px;
+  background: url(../images/icon.png) no-repeat;
+}
+.icon-16.leftArrow {
+  width: 20px;
+  height: 40px;
+  background-position: -113px -1px;
+}
+.icon-16.rightArrow {
+  width: 20px;
+  height: 40px;
+  background-position: -187px -1px;
+}
+.icon-16.plateNum {
+  width: 36px;
+  height: 26px;
+  background-position: -8px -35px;
+}
+.icon-16.orderLogo {
+  width: 36px;
+  height: 36px;
+  background-position: -8px -84px;
+}
+.icon-16.coupon {
+  width: 41px;
+  height: 41px;
+  background-position: -8px -145px;
+}
+.icon-16.myCoupon {
+  width: 41px;
+  height: 28px;
+  background-position: -8px -209px;
+}
+.icon-16.washCarOrder {
+  width: 36px;
+  height: 36px;
+  background-position: -8px -261px;
+}
+.icon-16.right-arrorw {
+  width: 15px;
+  height: 27px;
+  background-position: -65px -2px;
+}
+.block {
+  display: block !important;
+}
+.inline-block {
+  display: inline-block !important;
+}
+.none,
+[hidden] {
+  display: none !important;
+}
+.center,
+.text-center {
+  text-align: center;
+}
+.bg-fff {
+  background-color: #fff !important;
+}
+.bg-f5 {
+  background-color: #f5f5f5 !important;
+}
+label.theme-checkbox-radio:hover {
+  cursor: pointer;
+}
+label.theme-checkbox-radio > input {
+  display: none;
+}
+label.theme-checkbox-radio > input + span {
+  display: inline-block;
+  width: 42px;
+  height: 42px;
+  background-color: #fff;
+  border-radius: 50%;
+  border: 1px solid #bbb;
+  vertical-align: middle;
+  margin: 0px 5px 0 0;
+}
+label.theme-checkbox-radio > input[type='checkbox'] + span {
+  border-radius: 2px;
+}
+label.theme-checkbox-radio > input:checked + span {
+  background: #0092f6 url(../images/icon.png) no-repeat 7px 10px;
+  border-color: #0092f6;
+}
+/*按钮、输入框*/
+.buttonInput {
+  width: 540px;
+  height: 98px;
+  margin: 0 auto;
+  margin-bottom: 40px;
+  line-height: 98px;
+  text-align: center;
+  border-radius: 8px;
+  font-size: 32px;
+}

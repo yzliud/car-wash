@@ -1,179 +1,298 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>购买</title>
-  <!-- Tell the browser to be responsive to screen width -->
-  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-  <!-- Bootstrap 3.3.7 -->
-  <link rel="stylesheet" href="${SPATH}/bootstrap/css/bootstrap.min.css">
-
-  <!-- Theme style -->
-  <link rel="stylesheet" href="${SPATH}/dist/css/AdminLTE.min.css">
-  <link rel="stylesheet" href="${SPATH}/css/weui.css">
-    <link rel="stylesheet" href="${SPATH}/css/example.css">
-      <link rel="stylesheet" href="${SPATH}/awesome/4.4/css/font-awesome.min.css">
-      <link rel="stylesheet" type="text/css" href="${SPATH}/carnumber/css/jquery.css"/>
-  <!-- AdminLTE Skins. Choose a skin from the css/skins
-       folder instead of downloading all of them to reduce the load. -->
-
-  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-  <!--[if lt IE 9]>
-  <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-  <![endif]-->
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-COMPATIBLE" content="IE=edge,chrome=1"/>
+    <meta name="renderer" content="webkit">
+    <meta name="force-rendering" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta name="viewport" content="target-densitydpi=device-dpi,width=750,user-scalable=no" >
+    <script>
+        /* Fix viewport*/
+        (function (f, u) {
+            var o = navigator.userAgent, r = 750, e = f.innerWidth || r, g = f.outerHeight || e, q = f.screen.width || e, d = f.screen.availWidth || e, n = f.innerHeight || r, p = f.outerHeight || n, a = f.screen.height || n, k = f.screen.availHeight || n, l = Math.min(e, g, q, d, n, p, a, k), h = l / r, b = f.devicePixelRatio;
+            h = Math.min(h, b);
+            if (h < 1) {
+                var t = ",initial-scale=" + h + ",maximum-scale=" + h, c = u.getElementsByTagName("meta"), j;
+                if (/iphone|ipod/ig.test(o)) {
+                    j = ",user-scalable=no"
+                }
+                if (/android/ig.test(o)) {
+                    j = ""
+                }
+                t += j || "";
+                if (/zenlife-android-webview/.test(o) && !/viewport/.test(o)) {
+                    document.querySelector('html').style.zoom = h
+                }
+                if (top.location != location) {
+                    document.querySelector('html').style.zoom = h
+                }
+                ;
+                for (var s = 0, m; s < c.length; s++) {
+                    m = c[s];
+                    if (m.name == "viewport") {
+                        m.content += t
+                    }
+                }
+            }
+        }).call(this, window, document);
+    </script>
+    <link rel="stylesheet" href="${SPATH}/ui/css/common.css"/>
+    <link rel="stylesheet" href="${SPATH}/ui/css/washCar.css"/>
+	<link rel="stylesheet" href="${SPATH}/layer.mobile-v2.0/layer_mobile/need/layer.css">
+    <title>购买</title>
 </head>
-<body class="hold-transition  sidebar-mini">
+<body class="bg-f5">
 <form id="editForm" method="post" action="${CPATH}/car/order/pay">
-<div class="wrapper" style="overflow-x:hidden">
-
- <div class="col-xs-12" style="padding-left: 0px;padding-right: 0px;">
-          <div class="box box-solid" style="margin-bottom: 0px;">
-            <div class="box-body" style="padding-left: 0px;padding-top: 0px;padding-bottom: 0px;padding-right: 0px;">
-              <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
-                <div class="carousel-inner">
-                  <div class="item active">
-                    <img src="${SPATH}/img/logo.png" alt="First slide">
-
-                    <div class="carousel-caption">
-                      
-                    </div>
-                  </div>
-                </div>
-                <a class="left carousel-control" href="#carousel-example-generic" data-slide="prev">
-                </a>
-                <a class="right carousel-control" href="#carousel-example-generic" data-slide="next">
-                </a>
-              </div>
-            </div>
-          </div>
+<div class="shadowWrap">
+    <div class="wrap">
+        <div class="listTitle">手机号</div>
+        <div class="itermBlock inputWraper">
+            <input class="buttonInput carType" placeholder="请输入您的手机号码" id="mobile" name="mobile" value="${washMember.mobile!}"/>
         </div>
-
-
-<div class="weui-cells__title">手机号</div>
-        <div class="weui-cells">
-            <div class="weui-cell">
-                <div class="weui-cell__bd">
-                    <input class="weui-input" type="text" id="mobile" name="mobile" value="${washMember.mobile!}" />
-                </div>
+    </div>
+    <div class="wrap">
+        <div class="listTitle">车牌号</div>
+         <div class="itermBlock abbreviationWap clearfix">
+            <div class="abbreviatIno on-left">
+                <div class="abbreviatTitle">
+                    <span class="name">
+                    <#if washMember.carNumber??>${washMember.carNumber?substring(0,1)}
+                    <#else>苏</#if></span>
+                    <span class="downTrangle"></span>
+                </div>    
             </div>
+            <#if washMember.carNumber??><input type="text" class="buttonInput fillAbbreviat on-left" id="car_number" name="car_number" value="${washMember.carNumber?substring(1,7)}" placeholder="点击输入" onchange="javascript:reckon();"/>
+            <#else><input type="text" class="buttonInput fillAbbreviat on-left" id="car_number" name="car_number" value="" placeholder="点击输入" onchange="javascript:reckon();"/></#if>
+            
         </div>
-        <div class="weui-cells__title">车牌号</div>
-        <div class="weui-cells">
-            <div class="weui-cell">
-                <div class="weui-cell__bd">
-                    <input class="weui-input" id="car_name" name="car_name" type="text" value="${washMember.carNumber!}" placeholder="请输入车牌号"/>
-                </div>
+    </div>
+    <div class="wrap">
+        <div class="listTitle">支付信息</div>
+        <div class="itermBlock">
+            <div class="box payInfo clearfix">
+                <div class="on-left title">精洗</div>
+                <div class="on-right" id="totalFeeDiv">￥${totalFee!0}</div>
             </div>
-        </div>
-
-<div class="weui-cells" style="margin-top: 0px;">
-            <div class="weui-cell weui-cell_select weui-cell_select-after">
-                <div class="weui-cell__hd">
-                    <label for="" class="weui-label">优惠券</label>
+            <div class="box payInfo  SelectcouponBlock">
+                <div class="clearfix couponselcontent">
+                    <div class="on-left title">选择优惠卷</div>
+                    <div class="on-right">
+                        <span class="orange disPrice"></span>
+                        <i class="icon-16 right-arrorw"></i>
+                    </div>    
                 </div>
-                <div class="weui-cell__bd">
-                    <select class="weui-select" name="coupon_id" id="coupon_id">
+                <div class="canSelCouponIterms none">
+
                     <#if wcdList??>
-					<#list wcdList as x>
-                        <option value="${x.id!}">${x.couponName!}:${x.discountAmount!0}元</option>
-                     </#list>
-				</#if>	
-                    </select>
+                    <#list wcdList as x>
+                    <div class="box payInfo" onclick="javascript:selectConpon('${x.id!}');">
+                        <div class="on-left title">${x.couponName!}</div>
+                        <div class="on-right">
+                            <span class="orange disPrice">-￥${x.discountAmount!0}</span>
+                            <i class="icon-16 right-arrorw"></i>
+                        </div>
+                    </div>
+                    </#list>
+                    </#if>
+                  
+                </div>
+            </div>
+            <div class="box payInfo clearfix">
+                <div class="on-right">
+                    <span class="orange allTitle">总计</span>
+                    <span class="orange" id="realFeeDiv">￥${realFee!0}</span>
                 </div>
             </div>
         </div>
-
-<div class="row" style="margin-top: 10px;">
-				 	 <div class="col-md-3 col-sm-6 col-xs-12">
-			          <div class="info-box ">
-			            <span class="info-box-icon"><i class="fa fa-shopping-cart"></i></span>
-			
-			            <div class="info-box-content">
-			              <span class="info-box-number"> 总计：${totalFee!0}元</span>
-			            </div>
-			          </div>
-			        </div>
-				 </div>
-
-
-
-         <div style="width: 100%;position: fixed; bottom: 0px;font-weight: bold;text-align: center;background-color: #00a7d0;color: white; border: 1px solid #00a7d0;height:50px;line-height:50px;margin: auto;margin-top: 30px" onclick="topay()">确认付款</div>
+    </div>
 </div>
- <input type="hidden" id="set_meal_id" name="set_meal_id" value="${washSetMealData.id!}"> 
-<input type="hidden" id="device_mac" name="device_mac" value="${device_mac!}">
-
+<div class="wrapperBox">
+    <div class="payTypeWrap clearfix">
+        <span class="title on-left">支付方式：微信支付</span>
+        <button class="on-right buttonInput rightNowPay" type="button" onclick="topay()">立即支付</button>
+    </div>
+</div>
+<div class="coverBox none">
+    <div class="coverBg"></div>
+    <div class="allAbbreviatWrap">
+        <div class="littleBox">京</div>
+        <div class="littleBox">沪</div>
+        <div class="littleBox">浙</div>
+        <div class="littleBox">苏</div>
+        <div class="littleBox">粤</div>
+        <div class="littleBox">鲁</div>
+        <div class="littleBox">晋</div>
+        <div class="littleBox">冀</div>
+        <div class="littleBox">豫</div>
+        <div class="littleBox">川</div>
+        <div class="littleBox">渝</div>
+        <div class="littleBox">辽</div>
+        <div class="littleBox">吉</div>
+        <div class="littleBox">黑</div>
+        <div class="littleBox">皖</div>
+        <div class="littleBox">鄂</div>
+        <div class="littleBox">湘</div>
+        <div class="littleBox">赣</div>
+        <div class="littleBox">闽</div>
+        <div class="littleBox">陕</div>
+        <div class="littleBox">甘</div>
+        <div class="littleBox">宁</div>
+        <div class="littleBox">蒙</div>
+        <div class="littleBox">津</div>
+        <div class="littleBox">贵</div>
+        <div class="littleBox">云</div>
+        <div class="littleBox">桂</div>
+        <div class="littleBox">琼</div>
+        <div class="littleBox">青</div>
+        <div class="littleBox">新</div>
+        <div class="littleBox">藏</div>
+    </div>
+</div>
+<input type="hidden" name="car_number_hiden" id="car_number_hiden"/>
+<input type="hidden" name="coupon_id" id="coupon_id"/>
+<input type="hidden" id="set_meal_id" name="set_meal_id" value="${washSetMealData.id!}"/> 
+<input type="hidden" id="device_mac" name="device_mac" value="${device_mac!}"/>
 </form>
-<!-- jQuery 2.2.3 -->
-<!-- Bootstrap 3.3.7 -->
-<script src="${SPATH}/bootstrap/js/bootstrap.min.js"></script>
-<script src="${SPATH}/js/zepto.min.js"></script>
-<script type="text/javascript" src="${SPATH}/js/jweixin-1.0.0.js"></script>
-<script src="${SPATH}/js/weui.min.js"></script>
-<script src="${SPATH}/js/example.js"></script>
+<script type="text/javascript" src="${SPATH}/ui/js/jquery.min.js"></script>
 <script src="${SPATH}/layer.mobile-v2.0/layer_mobile/layer.js"></script>
-<script type="text/javascript" src="${SPATH}/carnumber/js/jquery.min.js"></script>
-<!--
-如果您要调用的高版本jQuery，请引用下面jQuery版本迁移辅助插件
-<script src="http://www.jq22.com/jquery/jquery-migrate-1.2.1.min.js"></script>
--->
-<script src="${SPATH}/carnumber/js/jquery.autocomplete.js" type="text/javascript"></script>
-<script src="${SPATH}/carnumber/js/data.js" type="text/javascript"></script>
-<script src="${SPATH}/carnumber/js/autocomplete.js" type="text/javascript"></script>
-<script src="${SPATH}/carnumber/js/index.js" type="text/javascript"></script>
-<script>
+<script type="text/javascript">
+    $(function(){
+        //显示下拉
+        $('.abbreviatIno').click(function(){
+            $('.coverBox').removeClass('none');
+        })
+        //选择简称
+        $('.coverBox .littleBox').click(function(){
+            var value = $(this).text();
+            $('.abbreviatIno .name').text(value);
+            $('.coverBox').addClass('none');
+        })
+        $('.coverBg').click(function(){
+            $('.coverBox').addClass('none');
+        })
+        
+        $('.SelectcouponBlock').click(function(){
+            $('.canSelCouponIterms').removeClass('none');
+        })
+        $('.canSelCouponIterms .payInfo').click(function(e){
+            var couponName = $(this).find('.title').text();
+            var discountPrice = $(this).find('.disPrice').text().replace(/[^0-9]+/g,'');
+            $('.couponselcontent').find('.title').text(couponName);
+            $('.couponselcontent').find('.disPrice').text('-￥'+discountPrice);
+            $('.canSelCouponIterms').addClass('none');
+            e.stopPropagation();
+        })
+    })
+    
+    function selectConpon(couponId){
+    	$("#coupon_id").val(couponId);
+    	var car_number = $("#car_number").val().toUpperCase();
+		car_number = $.trim($(".abbreviatTitle .name").text()) + car_number;
+		if(check_car_name(car_number) == true) {
+			$.ajax({
+				url:"${CPATH}/car/order/reckon",
+				data:{
+					"car_number": car_number,
+					"set_meal_id": $("#set_meal_id").val(),
+					"coupon_id": $("#coupon_id").val()
+				},
+				type:"post",
+				async: false,
+				//dataType: 'json',
+				success:function(data){//ajax返回的数据
+					console.log('hello');
+					$('#totalFeeDiv').text('￥'+data.totalFee);
+					$('#realFeeDiv').text('￥'+data.realFee);
+				}
+		   });	
+		}
+    }
 
+	function reckon(){
+		var car_number = $("#car_number").val().toUpperCase();
+		car_number = $.trim($(".abbreviatTitle .name").text()) + car_number;
+		if(check_car_name(car_number) == true) {
+			$.ajax({
+				url:"${CPATH}/car/order/reckon",
+				data:{
+					"car_number": car_number,
+					"set_meal_id": $("#set_meal_id").val(),
+					"coupon_id": $("#coupon_id").val()
+				},
+				type:"post",
+				async: false,
+				//dataType: 'json',
+				success:function(data){//ajax返回的数据
+					console.log(data);
+					$('#totalFeeDiv').text('￥'+data.totalFee);
+					$('#realFeeDiv').text('￥'+data.realFee);
+				}
+		   });	
+		}
+	}
 
-function topay(){
-	var car_name = $("#car_name").val().toUpperCase();
-	if(car_name == "输入车牌" || car_name == "") {
-		layer.open({
-			content: '请输入车牌',
-			skin: 'msg',
-			time: 2
-		});
-	} else if(check_car_name(car_name) == false) {
-		layer.open({
-			content: '请输入正确车牌',
-			skin: 'msg',
-			time: 2
-		});
-	} else {
-		var phonenum = $("#mobile").val();
-		var myreg = /^(((13[0-9]{1})|(15[0-9]{1})|(17[0-9]{1})|(18[0-9]{1}))+\d{8})$/;
-		if (!myreg.test(phonenum)) {
+	function topay(){
+		var car_number = $("#car_number").val().toUpperCase();
+		car_number = $.trim($(".abbreviatTitle .name").text()) + car_number;
+		if(car_number == "输入车牌" || car_number == "") {
 			layer.open({
-				content: '请输入合法手机号!',
+				content: '请输入车牌',
+				skin: 'msg',
+				
+				time: 2
+			});
+		} else if(check_car_name(car_number) == false) {
+			layer.open({
+				content: '请输入正确车牌',
 				skin: 'msg',
 				time: 2
 			});
-		}else{
-			$.ajax({
-		        url:"${CPATH}/car/order/check",
-		        data:{
-		        	"device_mac": $("#device_mac").val()
-		        },
-		        type:"post",
-		        async: false,
-		        //dataType: 'json',
-		        success:function(data){//ajax返回的数据
-		       		if(data.rtnCode==0){
-		       			$("#editForm").submit();
-		       	 	}else{
-			       	 	layer.open({
-			    			content: data.rtnMsg,
-			    			skin: 'msg',
-			    			time: 2
-			    		});
-		       	 	}
-		        }
-		   });
+		} else {
+			var phonenum = $("#mobile").val();
+			var myreg = /^(((13[0-9]{1})|(15[0-9]{1})|(17[0-9]{1})|(18[0-9]{1}))+\d{8})$/;
+			if (!myreg.test(phonenum)) {
+				layer.open({
+					content: '请输入合法手机号!',
+					skin: 'msg',
+					time: 2
+				});
+			}else{
+				$("#car_number_hiden").val(car_number);
+				$.ajax({
+					url:"${CPATH}/car/order/check",
+					data:{
+						"device_mac": $("#device_mac").val()
+					},
+					type:"post",
+					async: false,
+					//dataType: 'json',
+					success:function(data){//ajax返回的数据
+						if(data.rtnCode==0){
+							$("#editForm").submit();
+						}else{
+							layer.open({
+								content: data.rtnMsg,
+								skin: 'msg',
+								time: 2
+							});
+						}
+					}
+			   });
+			}
 		}
+		
 	}
 	
-}
+	function check_car_name(car_name) {
+		var re = /^[\u4e00-\u9fa5]{1}[A-Z]{1}[A-Z_0-9]{5}$/;
+		if(car_name.search(re) == -1) {
+			return false;
+		} else {
+			return true;
+		}
+	}
 </script>
+
 </body>
 </html>

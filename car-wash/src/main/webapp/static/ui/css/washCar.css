@@ -1,0 +1,619 @@
+/*购买*/
+.bg-red {
+  background-color: #ff6b49;
+}
+.bg-yellow {
+  background-color: #ffd803;
+}
+.getCoupon .buttonInput {
+  display: block;
+}
+.getCoupon .fillCouponNum {
+  background-color: #fff;
+  line-height: 32px;
+  padding: 32px 0;
+}
+.getCoupon .rightNowGet {
+  background-color: #ffd803;
+  color: #ff6b49;
+}
+/*订单、服务评价*/
+.shadowWrap {
+  padding: 40px 30px;
+}
+.shadowWrap .itermBlock {
+  border-radius: 8px;
+  background-color: #fff;
+  padding: 0 20px 20px;
+  margin-bottom: 40px;
+  box-shadow: 0 0 18px rgba(87, 87, 87, 0.2);
+}
+.shadowWrap .itermBlock.inputWraper {
+  padding: 0;
+}
+.shadowWrap .itermBlock.abbreviationWap {
+  height: 120px;
+  padding-bottom: 0px;
+}
+.shadowWrap .itermBlock.suggestBox {
+  /* width: 690px; */
+  width: 100%;
+  height: 200px;
+  padding: 40px 20px 20px;
+  font-size: 28px;
+}
+.shadowWrap .itermBlock .box {
+  line-height: 70px;
+  font-size: 28px;
+  padding: 0 15px;
+}
+.shadowWrap .itermBlock .box.evaluate,
+.shadowWrap .itermBlock .box.centerBlock,
+.shadowWrap .itermBlock .box.payInfo {
+  display: block;
+  border-bottom: 1px solid #ccc;
+  padding: 0 20px;
+  height: 110px;
+  line-height: 110px;
+}
+.shadowWrap .itermBlock .box.evaluate:last-child,
+.shadowWrap .itermBlock .box.centerBlock:last-child,
+.shadowWrap .itermBlock .box.payInfo:last-child {
+  border-bottom: none;
+}
+.shadowWrap .itermBlock .box.evaluate label span,
+.shadowWrap .itermBlock .box.centerBlock label span,
+.shadowWrap .itermBlock .box.payInfo label span {
+  vertical-align: middle;
+}
+.shadowWrap .itermBlock .box .title {
+  color: #333;
+}
+.shadowWrap .itermBlock .box .titleContent {
+  color: #777;
+}
+.shadowWrap .itermBlock .box .titleContent.address {
+  max-width: 480px;
+  min-height: 30px;
+  line-height: 36px;
+  position: relative;
+  top: 20px;
+  margin-bottom: 20px;
+}
+.shadowWrap .itermBlock .box.orderNum {
+  height: 110px;
+  line-height: 110px;
+  border-bottom: 1px solid #cccccc;
+  margin-bottom: 20px;
+}
+.shadowWrap .itermBlock .box.orderNum .titleContent {
+  color: #333;
+}
+.shadowWrap .itermBlock .operation {
+  font-size: 0;
+  margin-top: 30px;
+  margin-bottom: 25px;
+}
+.shadowWrap .itermBlock .operation .buttonInput {
+  width: 290px;
+  height: 82px;
+  line-height: 82px;
+  font-size: 28px;
+  margin: 0 16px;
+}
+.shadowWrap .itermBlock .operation .buttonInput.green {
+  border: 1px solid #22ac38;
+  color: #22ac38;
+}
+.shadowWrap .itermBlock .operation .buttonInput.blue {
+  border: 1px solid #0092f7;
+  color: #0092f7;
+}
+.shadowWrap .itermBlock .operation .buttonInput.long {
+  width: 626px;
+}
+.listTitle {
+  font-size: 28px;
+  color: #777;
+  padding-left: 10px;
+  margin-bottom: 20px;
+}
+.evaluate .title,
+.centerBlock .title {
+  font-size: 0;
+}
+.evaluate .levelTitle,
+.centerBlock .levelTitle {
+  display: inline-block;
+  vertical-align: middle;
+  margin-left: 25px;
+  font-size: 28px;
+}
+.centerBlock .levelTitle {
+  font-size: 32px;
+}
+.starfInfoEvaluWrap {
+  width: 100%;
+  height: 130px;
+  border-radius: 20px;
+  background-color: #fff;
+  margin: 0 auto;
+  margin-bottom: 30px;
+  box-shadow: 0 0 18px rgba(87, 87, 87, 0.2);
+}
+.starfInfoEvaluWrap .iterm {
+  width: 50%;
+  height: 70px;
+  text-align: center;
+  font-size: 0;
+  margin-top: 30px;
+  float: left;
+}
+.starfInfoEvaluWrap .iterm .num,
+.starfInfoEvaluWrap .iterm .titlename {
+  font-size: 28px;
+  color: #333;
+}
+.starfInfoEvaluWrap .iterm:first-child {
+  border-right: 1px solid #bbb;
+}
+.starfList {
+  padding: 0 30px;
+}
+.itermBlock {
+  position: relative;
+}
+.shadowWrap .itermBlock.starfBlock {
+  padding-bottom: 0px;
+}
+.shadowWrap .itermBlock.starfBlock .box {
+  display: block;
+  height: 140px;
+  line-height: 140px;
+}
+.shadowWrap .itermBlock.starfBlock .box .right-arrorw {
+  position: relative;
+  top: -5px;
+}
+.starfBlock .workWrap .workListTitle {
+  font-size: 32px;
+  color: #777;
+  margin-left: 10px;
+}
+.starfBlock .workWrap .workNum {
+  font-size: 36px;
+  color: #333;
+  display: inline-block;
+  margin-right: 35px;
+}
+.starfBlock .workWrap::before {
+  content: " ";
+  width: 12px;
+  height: 42px;
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-radius: 20px 0 0 0;
+}
+.starfBlock:nth-child(1) .workWrap::before {
+  background-color: #ff4747;
+}
+.starfBlock:nth-child(2) .workWrap::before {
+  background-color: #ffa531;
+}
+.starfBlock:nth-child(3) .workWrap::before {
+  background-color: #4fb7ff;
+}
+.starfBlock:nth-child(4) .workWrap::before {
+  background-color: #88d345;
+}
+.submitSuggest.buttonInput,
+.submitCarInfo.buttonInput {
+  width: 690px;
+  height: 98px;
+  line-height: 98px;
+  font-size: 36px;
+  color: #fff;
+  background: url('../images/submitBg.png') no-repeat center;
+  background-color: #006ef9;
+}
+.buttonInput.carType {
+  width: 100%;
+  height: 120px;
+  line-height: 120px;
+  padding: 0px;
+  text-align: left;
+  text-indent: 30px;
+  font-size: 32px;
+  border-radius: 8px;
+  margin-bottom: 0px;
+  padding: 44px 0px;
+  line-height: 32px;
+}
+.buttonInput.fillAbbreviat {
+  width: 500px;
+  height: 120px;
+  line-height: 32px;
+  text-align: left;
+  text-indent: 50px;
+  margin-bottom: 0px;
+  font-size: 32px;
+  padding: 44px 0px;
+}
+.buttonInput.fillAbbreviat.numInput {
+  width: 100%;
+  box-shadow: 0 0 18px rgba(87, 87, 87, 0.2);
+  background-color: #fff;
+}
+.buttonInput.rightNowPay {
+  display: inline-block;
+  width: 260px;
+  height: 80px;
+  line-height: 80px;
+  font-size: 28px;
+  color: #fff;
+  border-radius: 8px;
+  background: url('../images/submitBg.png') no-repeat top right;
+  background-size: cover;
+}
+.Centertop {
+  height: 420px;
+  background: #0f90ff url('../images/centerTopBg.png') no-repeat center;
+}
+.Centertop .bigCircle {
+  width: 180px;
+  height: 180px;
+  background-color: #4bbdff;
+  border-radius: 50%;
+  margin: 0 auto;
+  padding: 10px;
+}
+.Centertop .smallCircle {
+  width: 160px;
+  height: 160px;
+  background-color: #8fd5ff;
+  border-radius: 50%;
+  margin: 0 auto;
+  padding: 10px;
+}
+.Centertop .userInfo {
+  margin: 0 auto;
+  text-align: center;
+  padding-top: 50px;
+}
+.Centertop img {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+}
+.Centertop .userName {
+  font-size: 32px;
+  color: #fff;
+  margin-top: 20px;
+}
+.userCenterWrap .shadowWrap {
+  padding-top: 0px;
+  margin-top: -84px;
+}
+.userCenterWrap .shadowWrap .itermBlock {
+  border-radius: 20px;
+}
+.doWork {
+  width: 100%;
+  height: 120px;
+  font-size: 36px;
+  color: #fff;
+  text-align: center;
+  line-height: 120px;
+}
+.doWork.onWork {
+  background-color: #04de89;
+}
+.doWork.offWork {
+  background-color: #ffbc1a;
+}
+/*个人优惠券*/
+.typeTab {
+  width: 100%;
+  height: 100px;
+  background-color: #fff;
+  text-align: center;
+  margin-bottom: 40px;
+}
+.typeTab .tabIterm {
+  width: 120px;
+  height: 100px;
+  line-height: 100px;
+  margin: 0 50px;
+  display: inline-block;
+  font-size: 28px;
+  color: #999;
+}
+.typeTab .tabIterm.selected {
+  color: #333;
+  font-size: 32px;
+  border-bottom: 4px solid #0092f6;
+}
+.couponList .CouponIterm {
+  width: 690px;
+  height: 182px;
+  margin: 0 auto;
+  margin-bottom: 40px;
+}
+.couponList .CouponIterm .value {
+  width: 194px;
+  height: 182px;
+  text-align: center;
+  color: #fff;
+  float: left;
+}
+.couponList .CouponIterm .value .valueNum {
+  font-size: 42px;
+  padding-top: 50px;
+  margin-bottom: 10px;
+}
+.couponList .CouponIterm .value .tips {
+  font-size: 24px;
+}
+.couponList .CouponIterm .couponContent {
+  width: 494px;
+  height: 182px;
+  padding: 20px;
+  float: left;
+}
+.couponList .CouponIterm .couponName {
+  font-size: 24px;
+  line-height: 36px;
+  margin-bottom: 5px;
+}
+.couponList .CouponIterm .couponTips {
+  font-size: 24px;
+  line-height: 36px;
+}
+.couponList .CouponIterm .timeLine {
+  height: 70px;
+  line-height: 70px;
+  font-size: 24px;
+  color: #999;
+  margin-top: 15px;
+  border-top: 1px dashed #ccc;
+}
+.couponList.haveNoUsed .CouponIterm .couponName,
+.couponList.haveNoUsed .CouponIterm .couponTips {
+  color: #0092f6;
+}
+.couponList.haveUsed .CouponIterm .couponName,
+.couponList.haveOverdue .CouponIterm .couponName,
+.couponList.haveUsed .CouponIterm .couponTips,
+.couponList.haveOverdue .CouponIterm .couponTips {
+  color: #999;
+}
+.couponList:nth-child(1) .CouponIterm {
+  background: url('../images/haveNoUsed.png') no-repeat;
+}
+.couponList:nth-child(2) .CouponIterm {
+  background: url('../images/haveUsed.png') no-repeat;
+}
+.couponList:nth-child(3) .CouponIterm {
+  background: url('../images/haveOverdue.png') no-repeat;
+}
+.abbreviatTitle {
+  width: 120px;
+  height: 70px;
+  line-height: 70px;
+  border-right: 1px solid #ccc;
+  text-indent: 15px;
+}
+.abbreviatTitle .name {
+  font-size: 32px;
+  color: #333;
+}
+.abbreviatTitle .downTrangle {
+  border-top: 16px solid #0092f6;
+  border-left: 11px solid transparent;
+  border-right: 11px solid transparent;
+  position: relative;
+  top: 22px;
+  left: 16px;
+}
+.abbreviatIno {
+  width: 120px;
+  height: 120px;
+  padding: 25px 0;
+}
+.coverBox .coverBg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+}
+.coverBox .allAbbreviatWrap {
+  padding: 30px 30px 0px;
+  background-color: #d5d8dd;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  z-index: 99;
+  font-size: 0;
+}
+.coverBox .allAbbreviatWrap .littleBox {
+  width: 78px;
+  height: 78px;
+  line-height: 78px;
+  font-size: 32px;
+  color: #333;
+  text-align: center;
+  border-radius: 8px;
+  background-color: #fff;
+  border: 1px solid #bfc2c6;
+  box-shadow: 0 0 18px rgba(87, 87, 87, 0.2);
+  margin-right: 23px;
+  margin-bottom: 23px;
+  display: inline-block;
+}
+.coverBox .allAbbreviatWrap .littleBox:nth-child(7n) {
+  margin-right: 0px;
+}
+.payInfo * {
+  font-size: 32px;
+}
+.payInfo .orange {
+  color: #ff8400;
+}
+.payInfo .allTitle {
+  font-size: 28px;
+}
+.payInfo .right-arrorw {
+  position: relative;
+  top: -3px;
+  margin-left: 6px;
+}
+.payTypeWrap {
+  width: 100%;
+  height: 120px;
+  background-color: #fff;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  box-shadow: 0 0 18px rgba(87, 87, 87, 0.2);
+  padding: 20px 30px;
+  margin-top: 120px;
+}
+.payTypeWrap .title {
+  font-size: 28px;
+  color: #333;
+  line-height: 80px;
+}
+.wrapperBox {
+  margin-top: 120px;
+}
+.fillNumber {
+  height: 120px;
+  padding: 25px 0 0 50px;
+}
+.fillNumber .fillNumberTitle {
+  width: 172px;
+  height: 70px;
+  line-height: 70px;
+}
+.fillNumber .fillNumberTitle .name {
+  font-size: 32px;
+  color: #333;
+}
+.fillNumberWrap {
+  width: 690px;
+  margin: 0 auto;
+  padding: 40px 0px;
+}
+.checkOrderTop {
+  width: 100%;
+  height: 88px;
+  background: url('../images/gradientTopBg.png') no-repeat;
+  background-size: cover;
+  position: relative;
+}
+.checkOrderTopNew {
+  width: 100%;
+  height: 88px;
+  background-size: cover;
+  position: relative;
+}
+.checkOrderTop .time {
+  line-height: 88px;
+  color: #fff;
+  /* width: 374px; */
+  width: 100%;
+  height: 88px;
+  text-align: center;
+  font-size: 32px;
+  background-color: transparent;
+  border: none;
+  border-radius: 0;
+}
+.checkOrderTop .arrowLogo {
+  width: 88px;
+  height: 88px;
+  position: absolute;
+  top: 0;
+  z-index: 100;
+}
+.checkOrderTop .arrowLogo .icon-16 {
+  position: relative;
+  top: 22px;
+  left: 34px;
+}
+.checkOrderTop .arrowLogo.prevBtn {
+  left: 0;
+}
+.checkOrderTop .arrowLogo.nextBtn {
+  right: 0;
+}
+/*登录*/
+.loginBg {
+  width: 100%;
+  height: 1000px;
+  background: #fff url('../images/loginBg.png') no-repeat;
+}
+.loginWrap {
+  padding-top: 290px;
+}
+.loginWrap .GetcodeWrap {
+  width: 690px;
+  height: 120px;
+  margin: 0 auto;
+  margin-bottom: 40px;
+  border-radius: 8px;
+  background-color: #fff;
+  box-shadow: 0 0 18px rgba(87, 87, 87, 0.2);
+}
+.loginWrap .GetcodeWrap .fillCodeBox {
+  font-size: 0;
+}
+.loginWrap .GetcodeWrap .fillCode {
+  width: 440px;
+  height: 120px;
+  line-height: 32px;
+  font-size: 32px;
+  padding: 44px 0;
+  text-indent: 30px;
+}
+.loginWrap .GetcodeWrap .getCodeBtn {
+  width: 240px;
+  height: 70px;
+  line-height: 70px;
+  font-size: 32px;
+  color: #0092f6;
+  border-left: 1px solid #ccc;
+}
+.iDate {
+  position: relative;
+}
+.iDate > button {
+  border-radius: 0px;
+  border: none;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+  border-radius: 8px;
+  background: transparent !important;
+}
+.SelectcouponBlock {
+  height: auto !important;
+  padding: 0px !important;
+}
+.SelectcouponBlock .couponselcontent {
+  padding: 0px 20px !important;
+}
+.canSelCouponIterms {
+  background-color: #f5f5f5;
+}
+.canSelCouponIterms .payInfo {
+  box-sizing: border-box;
+  border-top: 1px solid #ccc;
+}

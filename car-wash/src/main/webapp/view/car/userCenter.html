@@ -1,71 +1,103 @@
 <!DOCTYPE html>
-<!-- saved from url=(0016)https://weui.io/ -->
-<html lang="zh-cmn-Hans"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    
-    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-COMPATIBLE" content="IE=edge,chrome=1"/>
+    <meta name="renderer" content="webkit">
+    <meta name="force-rendering" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta name="viewport" content="target-densitydpi=device-dpi,width=750,user-scalable=no" >
+    <script>
+        /* Fix viewport*/
+        (function (f, u) {
+            var o = navigator.userAgent, r = 750, e = f.innerWidth || r, g = f.outerHeight || e, q = f.screen.width || e, d = f.screen.availWidth || e, n = f.innerHeight || r, p = f.outerHeight || n, a = f.screen.height || n, k = f.screen.availHeight || n, l = Math.min(e, g, q, d, n, p, a, k), h = l / r, b = f.devicePixelRatio;
+            h = Math.min(h, b);
+            if (h < 1) {
+                var t = ",initial-scale=" + h + ",maximum-scale=" + h, c = u.getElementsByTagName("meta"), j;
+                if (/iphone|ipod/ig.test(o)) {
+                    j = ",user-scalable=no"
+                }
+                if (/android/ig.test(o)) {
+                    j = ""
+                }
+                t += j || "";
+                if (/zenlife-android-webview/.test(o) && !/viewport/.test(o)) {
+                    document.querySelector('html').style.zoom = h
+                }
+                if (top.location != location) {
+                    document.querySelector('html').style.zoom = h
+                }
+                ;
+                for (var s = 0, m; s < c.length; s++) {
+                    m = c[s];
+                    if (m.name == "viewport") {
+                        m.content += t
+                    }
+                }
+            }
+        }).call(this, window, document);
+    </script>
+    <link rel="stylesheet" href="${SPATH}/ui/css/common.css"/>
+    <link rel="stylesheet" href="${SPATH}/ui/css/washCar.css"/>
     <title>个人中心</title>
-    <!-- Tell the browser to be responsive to screen width -->
-  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-  <!-- Bootstrap 3.3.7 -->
-  <link rel="stylesheet" href="${SPATH}/bootstrap/css/bootstrap.min.css">
-
-  <!-- Theme style -->
-  <link rel="stylesheet" href="${SPATH}/dist/css/AdminLTE.min.css">
-  <link rel="stylesheet" href="${SPATH}/css/weui.css">
-    <link rel="stylesheet" href="${SPATH}/css/example.css">
-    <link rel="stylesheet" href="${SPATH}/layer.mobile-v2.0/layer_mobile/need/layer.css">
-  <!-- AdminLTE Skins. Choose a skin from the css/skins
-       folder instead of downloading all of them to reduce the load. -->
-
-  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-  <!--[if lt IE 9]>
-  <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-  <![endif]-->
 </head>
- <body>
- <div class="row">
- <div class="col-md-4">
- 			<div class="box box-widget widget-user" style="background-color:#00a7d0 !important;margin-bottom: 0px;">
-            <div class="widget-user-header bg-aqua-active" style="height:100px">
+<body class="bg-f5">
+<div class="userCenterWrap">
+    <div class="Centertop">
+        <div class="userInfo">
+            <div class="bigCircle">
+                <div class="smallCircle">
+                    <img src="${washMember.img!}">
+                </div>
             </div>
-            <div class="widget-user-image"  style="top: 10px;width:90px;height:90px">
-              <img class="img-circle" src="${washMember.img!}" alt="User Avatar">
-            </div>
-			<div class="row" align="center" style="color:white;margin-top: 5px;">
-			 <h3 class="widget-user-username">${washMember.nickName!}</h3>
-			</div>
-          </div>
-          
-          <div class="box box-widget widget-user-2">
-          
-            <div class="box-footer no-padding">
-              <ul class="nav nav-stacked">
-                <li onclick="javascript:forwardUserInfo();" ><a href="#">车牌绑定</a> </li>
-                <li onclick="javascript:forwardOrderHis();" ><a href="#">我的订单</a></li>
-                <li onclick="javascript:forwardCoupon();" > <a href="#">领取优惠卷 </a></li>
-                <li onclick="javascript:forwardCouponList();" ><a href="#">我的优惠卷</a></li>
-                <#if washMember.userType == '1'> 
-                <li onclick="javascript:forwardWashOrder();" ><a href="#">洗车订单 </a></li>
-                </#if>
-              </ul>
-            </div>
-          </div>
+            <div class="userName">${washMember.nickName!}</div>
         </div>
-        
- </div>
-   
-
-<!-- jQuery 2.2.3 -->
-<script src="${SPATH}/js/jquery-2.2.3.min.js"></script>
-<!-- Bootstrap 3.3.7 -->
-<script src="${SPATH}/bootstrap/js/bootstrap.min.js"></script>
-<script src="${SPATH}/js/zepto.min.js"></script>
-<script type="text/javascript" src="${SPATH}/js/jweixin-1.0.0.js"></script>
-<script src="${SPATH}/js/weui.min.js"></script>
-<script src="${SPATH}/js/example.js"></script>
-<script src="${SPATH}/layer.mobile-v2.0/layer_mobile/layer.js"></script>
+    </div>
+    <div class="shadowWrap">
+        <div class="wrap">
+            <div class="itermBlock">
+                <a class="box centerBlock clearfix" onclick="javascript:forwardUserInfo();">
+                    <div class="on-left title">
+                        <i class="icon-16 plateNum"></i>
+                        <span class="levelTitle">车牌绑定</span>
+                    </div>
+                    <div class="on-right"><i class="icon-16 right-arrorw"></i></div>
+                </a>
+                <a class="box centerBlock clearfix" onclick="javascript:forwardOrderHis();">
+                    <div class="on-left title">
+                        <i class="icon-16 orderLogo"></i>
+                        <span class="levelTitle">我的订单</span>
+                    </div>
+                    <div class="on-right"><i class="icon-16 right-arrorw"></i></div>
+                </a>
+                <a class="box centerBlock clearfix" onclick="javascript:forwardCoupon();">
+                    <div class="on-left title">
+                        <i class="icon-16 coupon"></i>
+                        <span class="levelTitle">领取优惠卷</span>
+                    </div>
+                    <div class="on-right"><i class="icon-16 right-arrorw"></i></div>
+                </a>
+                <a class="box centerBlock clearfix" onclick="javascript:forwardCouponList();">
+                    <div class="on-left title">
+                        <i class="icon-16 myCoupon"></i>
+                        <span class="levelTitle">我的优惠卷</span>
+                    </div>
+                    <div class="on-right"><i class="icon-16 right-arrorw"></i></div>
+                </a>
+				<#if washMember.userType == '1'> 
+                <a class="box centerBlock clearfix" onclick="javascript:forwardWashOrder();">
+                    <div class="on-left title">
+                        <i class="icon-16 washCarOrder"></i>
+                        <span class="levelTitle">洗车订单</span>
+                    </div>
+                    <div class="on-right"><i class="icon-16 right-arrorw"></i></div>
+                </a>
+				</#if>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
 <script>
 function forwardUserInfo(){
 	window.location.href = "${CPATH}/car/member/forwardUserInfo";
@@ -83,5 +115,4 @@ function forwardCouponList(){
 	window.location.href = "${CPATH}/car/coupon/forwardList";
 }
 </script>
- </body>
 </html>

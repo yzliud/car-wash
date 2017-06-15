@@ -36,6 +36,15 @@ public abstract class BaseWashOrdOrder<M extends BaseWashOrdOrder<M>> extends Mo
 		return get("car_person_id");
 	}
 
+	public M setCarNumber(java.lang.String carNumber) {
+		set("car_number", carNumber);
+		return (M)this;
+	}
+
+	public java.lang.String getCarNumber() {
+		return get("car_number");
+	}
+
 	public M setWashPersonId(java.lang.String washPersonId) {
 		set("wash_person_id", washPersonId);
 		return (M)this;
@@ -61,6 +70,15 @@ public abstract class BaseWashOrdOrder<M extends BaseWashOrdOrder<M>> extends Mo
 
 	public java.lang.String getDeviceMac() {
 		return get("device_mac");
+	}
+
+	public M setMobile(java.lang.String mobile) {
+		set("mobile", mobile);
+		return (M)this;
+	}
+
+	public java.lang.String getMobile() {
+		return get("mobile");
 	}
 
 	public M setSetMealId(java.lang.String setMealId) {

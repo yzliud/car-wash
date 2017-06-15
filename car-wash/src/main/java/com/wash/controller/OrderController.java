@@ -6,6 +6,7 @@ import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -34,6 +35,7 @@ import com.wash.model.WashOrdOrder;
 import com.wash.model.WashSetMeal;
 import com.wash.model.WashTFlow;
 import com.wash.model.WashWorkPerson;
+import com.wash.service.OrderService;
 
 public class OrderController extends Controller{
 
@@ -54,28 +56,39 @@ public class OrderController extends Controller{
 				render("bind.html");
 			}else{
 				setAttr("washMember", washMember);
-				WashSetMeal wsm = WashSetMeal.dao.findFirst(" select * from wash_set_meal order by update_time desc ");
-				setAttr("washSetMealData",wsm);
 				
-				BigDecimal totalFee = wsm.getSalePrice();
-				BigDecimal discountFee = BigDecimal.ZERO;
+				Map<String, Object> mapFee = OrderService.reckonFee(washMember.getCardNum(), "", "");
+				
+				BigDecimal totalFee = (BigDecimal)mapFee.get("totalFee");
+				//BigDecimal discountFee = (BigDecimal)mapFee.get("discountFee");
+				BigDecimal realFee = (BigDecimal)mapFee.get("realFee");
+				WashSetMeal wsm = (WashSetMeal)mapFee.get("washSetMeal");
+				
 				//优惠卷
-				WashCouponDetail washCouponDetail = WashCouponDetail.dao.findFirst(
+				List<WashCouponDetail> wcdList = WashCouponDetail.dao.find(
 						"select * from wash_coupon_detail where member_id = ? and status = 1 and now() between effective_time and failure_time ORDER BY discount_amount DESC,failure_time "
-						, washMember.getId()); 
-				if(washCouponDetail != null){
-					discountFee = washCouponDetail.getDiscountAmount();
-				}
-				
-				BigDecimal realFee = totalFee.subtract(discountFee);
-				
+						, washMember.getId()); 	
 				setAttr("totalFee", totalFee);
-				setAttr("discountFee", discountFee);
 				setAttr("realFee", realFee);
+				setAttr("wcdList", wcdList);
+				setAttr("washSetMealData", wsm);
 				setAttr("device_mac",mac);
 				render("order.html");
 			}
 		}
+	}
+	
+	/**
+	 * 计算价格
+	 */
+	public void reckon(){
+		String carNumber = getPara("car_number");
+		String setMealId = getPara("set_meal_id");
+		String couponId = getPara("coupon_id");
+		//判断是否是内部车牌
+		Map<String, Object> map = OrderService.reckonFee(carNumber, setMealId, couponId);
+		
+		renderJson(map);
 	}
 	
 	/**
@@ -84,31 +97,31 @@ public class OrderController extends Controller{
 	public void pay(){
 		log.info("支付");
 		String setMealId = getPara("set_meal_id");
-		String cardNum = getPara("car_name");
-		//套餐信息
-		WashSetMeal wsm = WashSetMeal.dao.findFirst(" select * from wash_set_meal where id = ? ", setMealId);
+		String cardNum = getPara("car_number");
+		String couponId = getPara("coupon_id");
+		String mobile = getPara("mobile");
 		String deviceMac = getPara("device_mac");
-		//设备信息
-		WashDevice washDevice = WashDevice.dao.findFirst("select * from wash_device WHERE mac = ? ", deviceMac);
-		String deviceId = washDevice.getId();
-		BigDecimal totalFee = wsm.getSalePrice();
+		
 		String memberId = (String)getSessionAttr("memberIdSession");
 		String openId = (String)getSessionAttr("openIdSession");
 		
+		//设备信息
+		WashDevice washDevice = WashDevice.dao.findFirst("select * from wash_device WHERE mac = ? ", deviceMac);
+		String deviceId = washDevice.getId();
+		
+		//更改绑定车牌
 		WashMember wm = WashMember.dao.findFirst("select * from wash_member WHERE open_id = ? ", openId);
 		wm.setCardNum(cardNum);
 		wm.update();
 		setSessionAttr("memberDataSession", wm);
+
+		//获取金额
+		Map<String, Object> mapFee = OrderService.reckonFee(cardNum, setMealId, couponId);
+		BigDecimal totalFee = (BigDecimal)mapFee.get("totalFee");
+		BigDecimal discountFee = (BigDecimal)mapFee.get("discountFee");
+		BigDecimal realFee = (BigDecimal)mapFee.get("realFee");
+		WashCouponDetail washCouponDetail = (WashCouponDetail)mapFee.get("washCouponDetail");
 		
-		//优惠卷
-		WashCouponDetail washCouponDetail = WashCouponDetail.dao.findFirst(
-				"select * from wash_coupon_detail where member_id = ? and status = 1 and now() between effective_time and failure_time ORDER BY discount_amount DESC,failure_time "
-				, memberId); 
-		BigDecimal discountFee = BigDecimal.ZERO;
-		if(washCouponDetail != null){
-			discountFee = washCouponDetail.getDiscountAmount();
-		}
-		BigDecimal realFee = totalFee.subtract(discountFee);
 		
 		Date date = new Date();
 		//订单编号
@@ -126,6 +139,8 @@ public class OrderController extends Controller{
 		woo.setDeviceId(deviceId);
 		woo.setDeviceMac(deviceMac);
 		woo.setOrderTime(date);
+		woo.setMobile(mobile);
+		woo.setCarNumber(cardNum);
 		woo.setOrderStatus(Consts.orderStatus_0);
 		woo.setPayMode(Consts.payMode_0);
 		woo.setSetMealId(setMealId);
@@ -137,6 +152,7 @@ public class OrderController extends Controller{
 		woo.setUpdateDate(date);
 		woo.setDelFlag("0");
 		boolean flag = false;
+		//判读是否需要支付金额
 		if(realFee.compareTo(BigDecimal.ZERO) == 1){
 			flag = woo.save();
 			if(flag){

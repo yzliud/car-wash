@@ -1,39 +1,64 @@
 <!DOCTYPE html>
-<!-- saved from url=(0016)https://weui.io/ -->
-<html lang="zh-cmn-Hans"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    
-    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
-    <title>追加评价</title>
-    <link rel="stylesheet" href="${SPATH}/css/weui.css">
-    <link rel="stylesheet" href="${SPATH}/css/example.css">
-    <link rel="stylesheet" href="${SPATH}/layer.mobile-v2.0/layer_mobile/need/layer.css">
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-COMPATIBLE" content="IE=edge,chrome=1"/>
+    <meta name="renderer" content="webkit">
+    <meta name="force-rendering" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta name="viewport" content="target-densitydpi=device-dpi,width=750,user-scalable=no" >
+    <script>
+        /* Fix viewport*/
+        (function (f, u) {
+            var o = navigator.userAgent, r = 750, e = f.innerWidth || r, g = f.outerHeight || e, q = f.screen.width || e, d = f.screen.availWidth || e, n = f.innerHeight || r, p = f.outerHeight || n, a = f.screen.height || n, k = f.screen.availHeight || n, l = Math.min(e, g, q, d, n, p, a, k), h = l / r, b = f.devicePixelRatio;
+            h = Math.min(h, b);
+            if (h < 1) {
+                var t = ",initial-scale=" + h + ",maximum-scale=" + h, c = u.getElementsByTagName("meta"), j;
+                if (/iphone|ipod/ig.test(o)) {
+                    j = ",user-scalable=no"
+                }
+                if (/android/ig.test(o)) {
+                    j = ""
+                }
+                t += j || "";
+                if (/zenlife-android-webview/.test(o) && !/viewport/.test(o)) {
+                    document.querySelector('html').style.zoom = h
+                }
+                if (top.location != location) {
+                    document.querySelector('html').style.zoom = h
+                }
+                ;
+                for (var s = 0, m; s < c.length; s++) {
+                    m = c[s];
+                    if (m.name == "viewport") {
+                        m.content += t
+                    }
+                }
+            }
+        }).call(this, window, document);
+    </script>
+    <link rel="stylesheet" href="${SPATH}/ui/css/common.css"/>
+    <link rel="stylesheet" href="${SPATH}/ui/css/washCar.css"/>
+	<link rel="stylesheet" href="${SPATH}/layer.mobile-v2.0/layer_mobile/need/layer.css">
+    <title>服务评价</title>
 </head>
- <body>
- <div>
-    <div class="page__bd">
-
-        
-
-        <div class="weui-cells__title">追加评论</div>
-        <div class="weui-cells weui-cells_form">
-            <div class="weui-cell">
-                <div class="weui-cell__bd">
-                    <textarea class="weui-textarea" placeholder="请输入文本" id="evaluate" name="evaluate" rows="3"></textarea>
-                </div>
-            </div>
-        </div>
-        <div class="weui-btn-area">
-            <a class="weui-btn weui-btn_primary" href="javascript:appraise();" id="showTooltips">提交</a>
-        </div>
+<body class="bg-f5">
+<form id="editForm">
+<div class="shadowWrap">
+   
+    <div class="wrap">
+        <div class="listTitle">服务建议</div>
+        <textarea class="itermBlock suggestBox" id="evaluate" name="evaluate" placeholder="您的鼓励是我们服务的动力，说点什么吧"></textarea>
     </div>
+    <div class="buttonInput submitSuggest" onclick="javascript:appraise();">提交</div>
 </div>
-<input type="hidden" name="order_id" id="order_id" value="${order_id!}"/>
-<script src="${SPATH}/js/zepto.min.js"></script>
-<script type="text/javascript" src="${SPATH}/js/jweixin-1.0.0.js"></script>
-<script src="${SPATH}/js/weui.min.js"></script>
-<script src="${SPATH}/js/example.js"></script>
+<input type="hidden" name="orderId" id="orderId" value="${order_id!}"/>
+</form>
+</body>
+<script type="text/javascript" src="${SPATH}/ui/js/jquery.min.js"></script>
 <script src="${SPATH}/layer.mobile-v2.0/layer_mobile/layer.js"></script>
 <script>
+
 function appraise(){
 	var evaluate = $("#evaluate").val();
 	if(evaluate == "") {
@@ -47,7 +72,7 @@ function appraise(){
 	        url:"${CPATH}/car/order/appraise",
 	        data:{
 	        	"evaluate": $("#evaluate").val(),
-	        	"orderId": $("#order_id").val()
+	        	"orderId": $("#orderId").val()
 	        },
 	        type:"post",
 	        async: false,
@@ -74,6 +99,4 @@ function appraise(){
 	}
 }
 </script>
-
- </body>
 </html>

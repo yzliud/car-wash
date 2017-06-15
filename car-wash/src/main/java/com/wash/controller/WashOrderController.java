@@ -38,7 +38,7 @@ public class WashOrderController extends Controller{
 		String from = " ";
 		Page<Record> recordList = null;
 
-		select = " SELECT a.id,a.order_no,a.real_fee,a.device_id,a.order_time,a.pay_time,a.end_time,b.name device_name,b.address device_address,c.nick_name,c.mobile,c.car_number,d.flag evaluate_flag,d.evaluate,d.add_evaluate,a.order_status "
+		select = " SELECT a.id,a.order_no,a.real_fee,a.device_id,a.order_time,a.pay_time,a.end_time,b.name device_name,b.address device_address,c.nick_name,a.mobile,a.car_number,d.flag evaluate_flag,d.evaluate,d.add_evaluate,a.order_status "
 				+" ,CASE a.order_status WHEN 0 THEN '待付款'  WHEN 1 THEN '等待洗车' WHEN 2 THEN  '洗车中' WHEN 3 THEN  '待评价' WHEN 9 THEN  '已完结' ELSE '' END order_status_value "
 				+" ,CASE d.flag WHEN 0 THEN '好评'  WHEN 1 THEN '中评' WHEN 2 THEN  '差评' ELSE '' END evaluate_flag_value "
 				;
@@ -70,7 +70,7 @@ public class WashOrderController extends Controller{
 		String from = " ";
 		Page<Record> recordList = null;
 
-		select = " SELECT a.id,a.order_no,a.real_fee,a.device_id,a.order_time,a.pay_time,a.end_time,b.name device_name,b.address device_address,c.nick_name,c.mobile,c.car_number,d.flag evaluate_flag,d.status evaluate_status,d.evaluate,d.add_evaluate,a.order_status "
+		select = " SELECT a.id,a.order_no,a.real_fee,a.device_id,a.order_time,a.pay_time,a.end_time,b.name device_name,b.address device_address,c.nick_name,a.mobile,a.car_number,d.flag evaluate_flag,d.status evaluate_status,d.evaluate,d.add_evaluate,a.order_status "
 				+" ,CASE a.order_status WHEN 0 THEN '待付款'  WHEN 1 THEN '等待洗车' WHEN 2 THEN  '洗车中' WHEN 3 THEN  '待评价' WHEN 9 THEN  '已完结' ELSE '' END order_status_value "
 				+" ,CASE d.flag WHEN 0 THEN '好评'  WHEN 1 THEN '中评' WHEN 2 THEN  '差评' ELSE '' END evaluate_flag_value "
 				;

@@ -6,6 +6,7 @@ import java.util.Map;
 
 import io.netty.channel.Channel;
 
+import com.jfinal.aop.Clear;
 import com.jfinal.core.Controller;
 import com.jfinal.kit.PropKit;
 import com.jfinal.log.Log;
@@ -17,6 +18,7 @@ import com.samehope.plugin.wechat.model.WechatPushMsgConfig;
 import com.wash.Consts;
 import com.wash.Global;
 import com.wash.model.WashDevice;
+import com.wash.model.WashDeviceCommandBack;
 import com.wash.model.WashDeviceRecord;
 import com.wash.model.WashMember;
 import com.wash.model.WashOrdOrder;
@@ -113,6 +115,51 @@ public class DeviceController extends Controller {
 	}
 	
 	/**
+	 * 等待发送指令回参
+	 */
+	public void checkDeviceCommond(){
+		JsonResult jsonResult = new JsonResult();
+		String type = getPara("type");
+		String memberId = (String)getSessionAttr("memberIdSession");
+		String orderId = getPara("order_id");
+		WashOrdOrder washOrdOrder = WashOrdOrder.dao.findById(orderId);
+		if(null == washOrdOrder){
+			jsonResult.setRtnCode(1);
+			jsonResult.setRtnMsg("订单不存在");
+		}else{
+			WashDeviceRecord washDeviceRecord = WashDeviceRecord.dao.findFirst(
+					"SELECT * FROM wash_device_record WHERE device_id = ? AND wash_persion_id = ? AND order_id = ? ORDER BY update_date DESC"
+					, washOrdOrder.getDeviceId(), memberId, orderId);
+			
+			if( null == washDeviceRecord){
+				jsonResult.setRtnCode(1);
+				jsonResult.setRtnMsg("指令不存在");
+			}else{
+				WashDeviceCommandBack washDeviceCommandBack = WashDeviceCommandBack.dao.findFirst(
+						"select * from wash_device_command_back where channel_id = ? and msg = ? and update_date >= ? "
+						, washDeviceRecord.getChannelId()
+						, "4B"
+						, washDeviceRecord.getOperatorTime());
+				if(null != washDeviceCommandBack){
+					jsonResult.setRtnCode(0);
+					jsonResult.setRtnMsg("指令执行成功");
+				}else{
+					if("1".equals(type)){
+						Channel deviceChannel = Global.deviceMap.get(washOrdOrder.getDeviceMac());
+						String msg = "K"+PropKit.use("system_config.properties").get("duration")+"\n";
+						deviceChannel.writeAndFlush(msg);
+					}
+					jsonResult.setRtnCode(1);
+					jsonResult.setRtnMsg("指令执行失败");
+				}
+			}
+		}
+		log.info("checkDeviceCommond>>>>> " +orderId + "" + jsonResult.getRtnMsg());
+		renderJson(jsonResult);
+		
+	}
+	
+	/**
 	 * 发送指令
 	 * @param mac
 	 * @param msg
@@ -130,6 +177,7 @@ public class DeviceController extends Controller {
 			if (deviceChannel.isOpen()) {// 连接是否正常 发送指令
 				deviceChannel.writeAndFlush(msg);
 				flag = true;
+				washDeviceRecord.setChannelId(deviceChannel.id().toString());
 				washDeviceRecord.save();
 			}
 		}

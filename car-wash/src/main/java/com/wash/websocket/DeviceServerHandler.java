@@ -10,6 +10,7 @@ import java.util.List;
 import com.jfinal.log.Log;
 import com.samehope.common.utils.UuidUtils;
 import com.wash.Global;
+import com.wash.model.WashDeviceCommandBack;
 import com.wash.model.WashDeviceHeart;
 
 public class DeviceServerHandler extends ChannelInboundHandlerAdapter {
@@ -24,6 +25,8 @@ public class DeviceServerHandler extends ChannelInboundHandlerAdapter {
 			//log.info("DeviceServerHandler::::‘SIZE’ of BODY:" + size);
 			String body = msg.toString();
 			log.info("DeviceServerHandler::::‘BODY’ from device client:" + body);
+			
+			Date date = new Date();
 			//接收心跳	
 			if(body.length() == 8){
 
@@ -32,19 +35,30 @@ public class DeviceServerHandler extends ChannelInboundHandlerAdapter {
 				paramsList.add(body);
 				//将通道保存
 				Global.deviceMap.put(body, ctx.channel());
+				Global.channelMap.put(ctx.channel().id().toString(), body);
 				//保存心跳信息
 				WashDeviceHeart washDeviceHeart = WashDeviceHeart.dao.findFirst("select * from wash_device_heart where mac = ? ", body);
 				if(null == washDeviceHeart){
 					washDeviceHeart = new WashDeviceHeart();
 					washDeviceHeart.setId(UuidUtils.getUuid());
 					washDeviceHeart.setMac(body);
-					washDeviceHeart.setOperatorTime(new Date());
+					washDeviceHeart.setOperatorTime(date);
 					washDeviceHeart.save();
 				}else{
 					washDeviceHeart.setMac(body);
-					washDeviceHeart.setOperatorTime(new Date());
+					washDeviceHeart.setOperatorTime(date);
 					washDeviceHeart.update();
 				}
+			}else if(body.equals("4B")){
+				//保存回参
+				WashDeviceCommandBack washDeviceCommandBack = new WashDeviceCommandBack();
+				washDeviceCommandBack.setId(UuidUtils.getUuid());
+				washDeviceCommandBack.setMac(Global.channelMap.get(ctx.channel().id().toString()));
+				washDeviceCommandBack.setMsg(body);
+				washDeviceCommandBack.setCreateDate(date);
+				washDeviceCommandBack.setUpdateDate(date);
+				washDeviceCommandBack.setChannelId(ctx.channel().id().toString());
+				washDeviceCommandBack.save();
 			}
 			
 			log.info("信道写入！信道ID：：："+body + "++信道的值：：：" + ctx.channel());

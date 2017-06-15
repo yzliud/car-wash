@@ -16,11 +16,11 @@ import com.jfinal.plugin.activerecord.ActiveRecordPlugin;
 public class _MappingKit {
 
 	public static void mapping(ActiveRecordPlugin arp) {
-		
 		arp.addMapping("wash_company_purse", "id", WashCompanyPurse.class);
 		arp.addMapping("wash_coupon", "id", WashCoupon.class);
 		arp.addMapping("wash_coupon_detail", "id", WashCouponDetail.class);
 		arp.addMapping("wash_device", "id", WashDevice.class);
+		arp.addMapping("wash_device_command_back", "id", WashDeviceCommandBack.class);
 		arp.addMapping("wash_device_fault", "id", WashDeviceFault.class);
 		arp.addMapping("wash_device_heart", "id", WashDeviceHeart.class);
 		arp.addMapping("wash_device_record", "id", WashDeviceRecord.class);
@@ -28,6 +28,7 @@ public class _MappingKit {
 		arp.addMapping("wash_ord_evaluate", "id", WashOrdEvaluate.class);
 		arp.addMapping("wash_ord_order", "id", WashOrdOrder.class);
 		arp.addMapping("wash_ord_set_meal", "id", WashOrdSetMeal.class);
+		arp.addMapping("wash_plate_number", "id", WashPlateNumber.class);
 		arp.addMapping("wash_set_meal", "id", WashSetMeal.class);
 		arp.addMapping("wash_t_flow", "id", WashTFlow.class);
 		arp.addMapping("wash_tb_sequence", "name", WashTbSequence.class);

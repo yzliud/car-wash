@@ -1,37 +1,58 @@
 <!DOCTYPE html>
-<!-- saved from url=(0016)https://weui.io/ -->
-<html lang="zh-cmn-Hans"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    
-    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-COMPATIBLE" content="IE=edge,chrome=1"/>
+    <meta name="renderer" content="webkit">
+    <meta name="force-rendering" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta name="viewport" content="target-densitydpi=device-dpi,width=750,user-scalable=no" >
+    <script>
+        /* Fix viewport*/
+        (function (f, u) {
+            var o = navigator.userAgent, r = 750, e = f.innerWidth || r, g = f.outerHeight || e, q = f.screen.width || e, d = f.screen.availWidth || e, n = f.innerHeight || r, p = f.outerHeight || n, a = f.screen.height || n, k = f.screen.availHeight || n, l = Math.min(e, g, q, d, n, p, a, k), h = l / r, b = f.devicePixelRatio;
+            h = Math.min(h, b);
+            if (h < 1) {
+                var t = ",initial-scale=" + h + ",maximum-scale=" + h, c = u.getElementsByTagName("meta"), j;
+                if (/iphone|ipod/ig.test(o)) {
+                    j = ",user-scalable=no"
+                }
+                if (/android/ig.test(o)) {
+                    j = ""
+                }
+                t += j || "";
+                if (/zenlife-android-webview/.test(o) && !/viewport/.test(o)) {
+                    document.querySelector('html').style.zoom = h
+                }
+                if (top.location != location) {
+                    document.querySelector('html').style.zoom = h
+                }
+                ;
+                for (var s = 0, m; s < c.length; s++) {
+                    m = c[s];
+                    if (m.name == "viewport") {
+                        m.content += t
+                    }
+                }
+            }
+        }).call(this, window, document);
+    </script>
+    <link rel="stylesheet" href="${SPATH}/ui/css/common.css"/>
+    <link rel="stylesheet" href="${SPATH}/ui/css/washCar.css"/>
+	<link rel="stylesheet" href="${SPATH}/layer.mobile-v2.0/layer_mobile/need/layer.css">
     <title>领取优惠卷</title>
-    <link rel="stylesheet" href="${SPATH}/weui/weui.css">
-    <link rel="stylesheet" href="${SPATH}/weui/example.css">
-    <link rel="stylesheet" href="${SPATH}/layer.mobile-v2.0/layer_mobile/need/layer.css">
 </head>
- <body>
- <div>
-    <div class="page__bd">
-
-        <div class="weui-cells weui-cells_form">
-            <div class="weui-cell">
-                <div class="weui-cell__hd">
-                	<label class="weui-label">优惠卷号码</label>
-                </div>
-                <div class="weui-cell__bd">
-                    <input class="weui-input" id="couponNo" name="couponNo" value="" type="text" placeholder="请输入优惠券号"/>
-                </div>
-            </div>
-        </div>
-        
-        <div class="weui-btn-area">
-            <a class="weui-btn weui-btn_primary" href="javascript:update();" id="showTooltips">提交</a>
+<body class="bg-f5">
+<div class="getCoupon">
+    <div class="wrap">
+        <div class="itermBlock fillNumberWrap clearfix">
+            <input type="text" id="couponNo" name="couponNo" class="on-left buttonInput fillAbbreviat numInput" placeholder="请输入优惠券号码" />
         </div>
     </div>
+    <div class="buttonInput submitSuggest" onclick="javascript:update();">提交</div>
 </div>
-<script src="${SPATH}/weui/zepto.min.js"></script>
-<script type="text/javascript" src="${SPATH}/weui/jweixin-1.0.0.js"></script>
-<script src="${SPATH}/weui/weui.min.js"></script>
-<script src="${SPATH}/weui/example.js"></script>
+</body>
+<script type="text/javascript" src="${SPATH}/ui/js/jquery.min.js"></script>
 <script src="${SPATH}/layer.mobile-v2.0/layer_mobile/layer.js"></script>
 
 <script>
@@ -75,15 +96,5 @@ function update(){
 	}
 }
 
-function check_car_name(car_name) {
-	var re = /^[\u4e00-\u9fa5]{1}[A-Z]{1}[A-Z_0-9]{5}$/;
-	if(car_name.search(re) == -1) {
-		return false;
-	} else {
-		return true;
-	}
-}
 </script>
-
- </body>
 </html>
