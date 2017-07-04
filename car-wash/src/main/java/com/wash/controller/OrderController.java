@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.SortedMap;
 
 import org.jsoup.helper.StringUtil;
 
@@ -97,7 +98,7 @@ public class OrderController extends Controller{
 	public void pay(){
 		log.info("支付");
 		String setMealId = getPara("set_meal_id");
-		String cardNum = getPara("car_number");
+		String cardNum = getPara("car_number_hiden");
 		String couponId = getPara("coupon_id");
 		String mobile = getPara("mobile");
 		String deviceMac = getPara("device_mac");
@@ -218,74 +219,81 @@ public class OrderController extends Controller{
 	 * 支付回调
 	 */
 	@Clear
-	public void payBack(){
+	public void payBack() throws Exception{
 		log.info("支付回调");
 		
-//		Map<String, String> checkPayResult = WechatPay.checkPayResult(getRequest());
-//		String rtnCode = checkPayResult.get("rtnCode");
-//		String rtnMsg = checkPayResult.get("rtnMsg");
-//		String transactionId = checkPayResult.get("transactionId");
-//		String orderId = checkPayResult.get("orderId");
-		String rtnCode = getPara("rtnCode");
-		String rtnMsg = getPara("rtnMsg");
-		String transactionId = getPara("transactionId");
-		String orderId = getPara("orderId");
+		SortedMap<String, String> checkPayResult = WechatKit.checkPayResult(getRequest());
+		String rtnCode = checkPayResult.get("return_code");
+		String rtnMsg = checkPayResult.get("result_code");
+		String transactionId = checkPayResult.get("transaction_id");
+		String orderId = checkPayResult.get("out_trade_no");
+//		String rtnCode = getPara("rtnCode");
+//		String rtnMsg = getPara("rtnMsg");
+//		String transactionId = getPara("transactionId");
+//		String orderId = getPara("orderId");
 		log.info("rtnCode===="+rtnCode);
 		log.info("rtnMsg===="+rtnMsg);
+		
+		//SortedMap<String, String> checkPayResult = WechatKit.checkPayResult(getRequest());
+		boolean isWechatSign = WechatKit.isWechatSign(checkPayResult, PropKit.use("wx_config.properties").get("partnerkey"));
 		//验签通过
-		if("0".equals(rtnCode)&&"success".equals(rtnMsg)){
-			Date date = new Date();
-			//查询订单信息
-			WashOrdOrder woo = WashOrdOrder.dao.findFirst("select * from wash_ord_order where order_no = ? and del_flag = 0 ", orderId);
-			if(woo != null ){
-				boolean rtnFlag = true;
-				//订单为未支付， 才进行处理
-				if(Consts.orderStatus_0.equals(woo.getOrderStatus())){
-					woo.setOrderStatus(Consts.orderStatus_1);
-					woo.setPayTime(date);
-					woo.setPaySerialNumber(transactionId);
-					woo.setUpdateDate(date);
-					rtnFlag = woo.update();
-					
-					int flowId = Db.queryInt(" select _nextval('flow_sn') ");
-					
-					//流水
-					WashTFlow washTFlow = new WashTFlow();
-					washTFlow.setId(flowId+"");
-					washTFlow.setTSn(woo.getOrderNo());
-					washTFlow.setTType("00");
-					washTFlow.setMemberId(woo.getCarPersonId());
-					washTFlow.setTppType(0);
-					washTFlow.setTAmount(woo.getRealFee());
-					washTFlow.setTppSn(woo.getPaySerialNumber());
-					washTFlow.save();
-					
-					WashCompanyPurse washCompanyPurse = WashCompanyPurse.dao.findFirst("select * from wash_company_purse order by t_datetime desc ");
-					BigDecimal balance = new BigDecimal(0);
-					if(null != washCompanyPurse){
-						balance = washCompanyPurse.getBalance();
+		if(isWechatSign){
+			if("SUCCESS".equals(rtnCode)){
+				Date date = new Date();
+				//查询订单信息
+				WashOrdOrder woo = WashOrdOrder.dao.findFirst("select * from wash_ord_order where order_no = ? and del_flag = 0 ", orderId);
+				if(woo != null ){
+					boolean rtnFlag = true;
+					//订单为未支付， 才进行处理
+					if(Consts.orderStatus_0.equals(woo.getOrderStatus())){
+						woo.setOrderStatus(Consts.orderStatus_1);
+						woo.setPayTime(date);
+						woo.setPaySerialNumber(transactionId);
+						woo.setUpdateDate(date);
+						rtnFlag = woo.update();
+						
+						int flowId = Db.queryInt(" select _nextval('flow_sn') ");
+						
+						//流水
+						WashTFlow washTFlow = new WashTFlow();
+						washTFlow.setId(flowId+"");
+						washTFlow.setTSn(woo.getOrderNo());
+						washTFlow.setTType("00");
+						washTFlow.setMemberId(woo.getCarPersonId());
+						washTFlow.setTppType(0);
+						washTFlow.setTAmount(woo.getRealFee());
+						washTFlow.setTppSn(woo.getPaySerialNumber());
+						washTFlow.save();
+						
+						//公司账户
+						WashCompanyPurse washCompanyPurse = WashCompanyPurse.dao.findFirst("select * from wash_company_purse order by t_datetime desc ");
+						BigDecimal balance = BigDecimal.ZERO;
+						if(null != washCompanyPurse){
+							balance = washCompanyPurse.getBalance();
+						}
+						BigDecimal income = woo.getRealFee();
+						WashCompanyPurse wcp = new WashCompanyPurse();
+						wcp.setId(UuidUtils.getUuid());
+						wcp.setUid(woo.getCarPersonId());
+						wcp.setTFlowNo(flowId+"");
+						wcp.setTType("00");
+						wcp.setTDatetime(new Date());
+						wcp.setIncome(income);
+						wcp.setPay(BigDecimal.ZERO);
+						wcp.setBalance(balance.add(income));
+						wcp.save();
+						//更新优惠卷使用信息
+						Db.update("update wash_coupon_detail set status = 2, update_date = now() where order_no = ? ", orderId);
 					}
-					BigDecimal income = woo.getRealFee();
-					WashCompanyPurse wcp = new WashCompanyPurse();
-					wcp.setId(UuidUtils.getUuid());
-					wcp.setUid(woo.getCarPersonId());
-					wcp.setTFlowNo(flowId+"");
-					wcp.setTType("0");
-					wcp.setTDatetime(new Date());
-					wcp.setIncome(income);
-					wcp.setPay(new BigDecimal(0));
-					wcp.setBalance(balance.add(income));
-					//更新优惠卷使用信息
-					Db.update("update wash_coupon_detail set status = 2, update_date = now() where order_no = ? ", orderId);
+					if(rtnFlag){
+						log.info("向微信服务器告知支付成功!!!!!!");
+						WechatPay.responWXResult("success", getResponse());
+					}
 				}
-				if(rtnFlag){
-					log.info("向微信服务器告知支付成功!!!!!!");
-					WechatPay.responWXResult("success", getResponse());
-				}
+			}else{
+				log.info("向微信服务器告知支付失败!!!!!!");
+				WechatPay.responWXResult("false", getResponse());
 			}
-		}else{
-			log.info("向微信服务器告知支付失败!!!!!!");
-			WechatPay.responWXResult("false", getResponse());
 		}
 		renderNull();
 	}
@@ -301,17 +309,17 @@ public class OrderController extends Controller{
 		String from = " ";
 		Page<Record> recordList = null;
 		
-		select = " SELECT a.id,a.order_no,a.real_fee,a.order_time,a.pay_time,a.end_time,b.name device_name,b.address device_address,c.nick_name,d.flag evaluate_flag,d.status evaluate_status,d.evaluate,d.add_evaluate,a.order_status "
+		select = " SELECT a.id,a.order_no,a.real_fee,a.order_time,a.pay_time,a.end_time,a.car_number,b.name device_name,b.address device_address,c.nick_name,d.flag evaluate_flag,d.status evaluate_status,d.evaluate,d.add_evaluate,a.order_status "
 				+" ,CASE a.order_status WHEN 0 THEN '待付款'  WHEN 1 THEN '等待洗车' WHEN 2 THEN  '洗车中' WHEN 3 THEN  '待评价' WHEN 9 THEN  '已完结' ELSE '' END order_status_value "
 				+" ,CASE d.flag WHEN 0 THEN '好评'  WHEN 1 THEN '中评' WHEN 2 THEN  '差评' ELSE '' END evaluate_flag_value "
 				;
 		from =  " FROM wash_ord_order a"
 				+" LEFT JOIN wash_device b ON a.device_id = b.id"
-				+" LEFT JOIN wash_member c ON a.wash_person_id = c.id"
+				+" LEFT JOIN wash_member c ON a.car_person_id = c.id"
 				+" LEFT JOIN wash_ord_evaluate d ON a.id = d.id"
 				+" WHERE  a.del_flag = 0 and car_person_id = ? and a.order_status != 0 order by a.update_date desc ";
 		recordList = Db.paginate(pageNumber, Consts.PageSize, select, from, memberId);
-		
+		log.debug("orderHis:" + select + from + ";--" + memberId);
 		renderJson(recordList);
 	}
 	

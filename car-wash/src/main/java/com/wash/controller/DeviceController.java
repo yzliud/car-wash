@@ -190,6 +190,7 @@ public class DeviceController extends Controller {
 		renderNull();
 	}
 	
+	@Clear
 	public static boolean sendWeMsg(String openId, WashOrdOrder washOrdOrder, String path){
         boolean isPush= false;
 		if(openId != null && !"".equals(openId)) {
@@ -223,7 +224,7 @@ public class DeviceController extends Controller {
 			WechatPushMsgConfig wechatPushMsgConfig = WechatPushMsgConfig.getWechatPushMsgConfig(PropKit.use("wx_config.properties").get("appid"), 
 					PropKit.use("wx_config.properties").get("secret"), 
 					openId, 
-					"pgfnatrhAH4MCqseEsUcR7Tc4E4_hbbyN1J4s56KyPE",
+					PropKit.use("wx_config.properties").get("template_id"),
 					path + PropKit.use("wx_config.properties").get("appraise_jumpurl") + washOrdOrder.getId());
 			String pushWXTemplateMsg = WechatKit.pushWXTemplateMsg(wechatPushMsgConfig,dataMap);
 			log.info("WXMsg:" + pushWXTemplateMsg);

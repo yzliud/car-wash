@@ -16,6 +16,7 @@ import com.jfinal.plugin.activerecord.ActiveRecordPlugin;
 public class _MappingKit {
 
 	public static void mapping(ActiveRecordPlugin arp) {
+		
 		arp.addMapping("wash_company_purse", "id", WashCompanyPurse.class);
 		arp.addMapping("wash_coupon", "id", WashCoupon.class);
 		arp.addMapping("wash_coupon_detail", "id", WashCouponDetail.class);

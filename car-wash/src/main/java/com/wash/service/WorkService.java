@@ -3,7 +3,6 @@ package com.wash.service;
 import java.util.Date;
 
 import com.jfinal.aop.Before;
-import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.tx.Tx;
 import com.samehope.common.utils.UuidUtils;
 import com.wash.Consts;
@@ -26,9 +25,8 @@ public class WorkService {
 		boolean flag_3 = true;
 		
 		//将其他设备的上班记录关闭，并记录下班记录
-		Db.update("update wash_work_person set wash_person_id = '' where wash_person_id = ? and id != ? ", memberId, washDevice.getId());
-		Db.update("update wash_work_device_record set work_off_time = ?, flag = 1, update_date = ? where wash_person_id = ? and wash_device_id != ? and flag = 0 ",
-				date, date, memberId, washDevice.getId());
+		//Db.update("update wash_work_person set wash_person_id = '' where wash_person_id = ? and id != ? ", memberId, washDevice.getId());
+		//Db.update("update wash_work_device_record set work_off_time = ?, flag = 1, update_date = ? where wash_person_id = ? and wash_device_id != ? and flag = 0 ", date, date, memberId, washDevice.getId());
 		
 		WashWorkPerson washWorkPerson =  WashWorkPerson.dao.findById(washDevice.getId());
 		if(washWorkPerson != null && washWorkPerson.getId() != null){

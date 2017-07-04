@@ -37,8 +37,8 @@
             }
         }).call(this, window, document);
     </script>
-    <link rel="stylesheet" href="${SPATH}/ui/css/common.css"/>
-    <link rel="stylesheet" href="${SPATH}/ui/css/washCar.css"/>
+    <link rel="stylesheet" href="${SPATH}/ui/css/common.css?version=cef1d34221d80efd"/>
+    <link rel="stylesheet" href="${SPATH}/ui/css/washCar.css?version=cef1d34221d80efd"/>
 	<link rel="stylesheet" href="${SPATH}/layer.mobile-v2.0/layer_mobile/need/layer.css">
     <title>工作</title>
 </head>
@@ -101,7 +101,13 @@
                         </div>
                     </a>
                 </div>
-                <div class="itermBlock starfBlock" onclick="javascript:toOrder();">
+                <#if jsonResult.rtnCode == 11>
+				    <div class="itermBlock starfBlock" >
+				<#elseif jsonResult.rtnCode == 10>
+				    <div class="itermBlock starfBlock" onclick="javascript:toOrder();">
+				<#elseif jsonResult.rtnCode == 20>
+					<div class="itermBlock starfBlock" onclick="javascript:toOrder();">
+				</#if> 
                     <a class="box workWrap clearfix">
                         <div class="on-left title">
                             <span class="workListTitle">排队订单</span>
