@@ -1,4 +1,1 @@
-jdbcUrl = jdbc:mysql://139.196.182.162:3306/car_wash?characterEncoding=utf8&zeroDateTimeBehavior=convertToNull
-user = root
-password = wash@111
-devMode = true
+
