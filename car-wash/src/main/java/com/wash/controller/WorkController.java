@@ -91,15 +91,16 @@ public class WorkController extends Controller {
 			setAttr("lastWeekCount", lastWeekCount);
 			
 			//排队
-			long waitCount = Db.queryLong("select count(1) from wash_ord_order where device_mac = ? and DATE_FORMAT(pay_time,'%Y-%m-%d')=DATE_FORMAT(NOW(),'%Y-%m-%d') and order_status in(1,2) ", mac );
+			//long waitCount = Db.queryLong("select count(1) from wash_ord_order where device_mac = ? and DATE_FORMAT(pay_time,'%Y-%m-%d')=DATE_FORMAT(NOW(),'%Y-%m-%d') and order_status in(1,2) ", mac );
+			long waitCount = Db.queryLong("select count(1) from wash_ord_order a where  (SELECT 1 FROM wash_work_person p WHERE p.wash_person_id = ? and a.device_id = p.id) and order_status in(1,2) and del_flag = 0 ", memberId );
 			setAttr("waitCount", waitCount);
 			
 			//好评数
-			long highPraiseCount = Db.queryLong("SELECT COUNT(1) FROM wash_ord_evaluate a ,wash_ord_order b WHERE a.id = b.id AND a.flag = 0 ");
+			long highPraiseCount = Db.queryLong("SELECT COUNT(1) FROM wash_ord_evaluate a ,wash_ord_order b WHERE a.id = b.id AND a.flag in(0, 1) ");
 			setAttr("highPraiseCount", highPraiseCount);
 			
 			//差评数
-			long badPraiseCount = Db.queryLong("SELECT COUNT(1) FROM wash_ord_evaluate a ,wash_ord_order b WHERE a.id = b.id AND a.flag = 2 ");
+			long badPraiseCount = Db.queryLong("SELECT COUNT(1) FROM wash_ord_evaluate a ,wash_ord_order b WHERE a.id = b.id AND a.flag = 3 ");
 			setAttr("badPraiseCount", badPraiseCount);
 			
 			//排队订单

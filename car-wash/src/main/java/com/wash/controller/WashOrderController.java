@@ -27,12 +27,12 @@ public class WashOrderController extends Controller{
 		int pageNumber = getParaToInt("pageNumber");
 		String memberId = (String)getSessionAttr("memberIdSession");
 		
-		String deviceId = "";
-		//MAC 为空时 查询工作表
-		WashWorkPerson washWorkPerson = WashWorkPerson.dao.findFirst("SELECT * FROM wash_work_person WHERE wash_person_id = ? ", memberId);
-		if(washWorkPerson != null && washWorkPerson.getId() != null){
-			deviceId = washWorkPerson.getId();
-		}
+//		String deviceId = "";
+//		//MAC 为空时 查询工作表
+//		WashWorkPerson washWorkPerson = WashWorkPerson.dao.findFirst("SELECT * FROM wash_work_person WHERE wash_person_id = ? ", memberId);
+//		if(washWorkPerson != null && washWorkPerson.getId() != null){
+//			deviceId = washWorkPerson.getId();
+//		}
 		
 		String select = " ";
 		String from = " ";
@@ -40,18 +40,19 @@ public class WashOrderController extends Controller{
 
 		select = " SELECT a.id,a.order_no,a.real_fee,a.device_id,a.order_time,a.pay_time,a.end_time,b.name device_name,b.address device_address,c.nick_name,a.mobile,a.car_number,d.flag evaluate_flag,d.evaluate,d.add_evaluate,a.order_status "
 				+" ,CASE a.order_status WHEN 0 THEN '待付款'  WHEN 1 THEN '等待洗车' WHEN 2 THEN  '洗车中' WHEN 3 THEN  '待评价' WHEN 9 THEN  '已完结' ELSE '' END order_status_value "
-				+" ,CASE d.flag WHEN 0 THEN '好评'  WHEN 1 THEN '中评' WHEN 2 THEN  '差评' ELSE '' END evaluate_flag_value "
+				+" ,CASE d.flag WHEN 0 THEN '非常满意'  WHEN 1 THEN '满意' WHEN 2 THEN  '一般' ELSE '不满意' END evaluate_flag_value "
 				;
 		from =  " FROM wash_ord_order a"
 				+" LEFT JOIN wash_device b ON a.device_id = b.id "
 				+" LEFT JOIN wash_member c ON a.car_person_id = c.id "
 				+" LEFT JOIN wash_ord_evaluate d ON a.id = d.id "
-				+" WHERE  a.del_flag = 0 and a.device_id = ? "
-				+ " and a.order_status in(1,2)"
-				+ " and DATE_FORMAT(pay_time,'%Y-%m-%d')=DATE_FORMAT(NOW(),'%Y-%m-%d')"
+				+" WHERE  a.del_flag = 0 "
+				+ " and (SELECT 1 FROM wash_work_person p WHERE p.wash_person_id = ? and a.device_id = p.id)  "
+				+ " and a.order_status in(1,2) "
+				//+ " and DATE_FORMAT(pay_time,'%Y-%m-%d')=DATE_FORMAT(NOW(),'%Y-%m-%d') "
 				+ " order by a.update_date desc ";
 		
-		recordList = Db.paginate(pageNumber, Consts.PageSize,  select, from, deviceId);
+		recordList = Db.paginate(pageNumber, Consts.PageSize,  select, from, memberId);
 
 		renderJson(recordList);
 	}
@@ -72,7 +73,7 @@ public class WashOrderController extends Controller{
 
 		select = " SELECT a.id,a.order_no,a.real_fee,a.device_id,a.order_time,a.pay_time,a.end_time,b.name device_name,b.address device_address,c.nick_name,a.mobile,a.car_number,d.flag evaluate_flag,d.status evaluate_status,d.evaluate,d.add_evaluate,a.order_status "
 				+" ,CASE a.order_status WHEN 0 THEN '待付款'  WHEN 1 THEN '等待洗车' WHEN 2 THEN  '洗车中' WHEN 3 THEN  '待评价' WHEN 9 THEN  '已完结' ELSE '' END order_status_value "
-				+" ,CASE d.flag WHEN 0 THEN '好评'  WHEN 1 THEN '中评' WHEN 2 THEN  '差评' ELSE '' END evaluate_flag_value "
+				+" ,CASE d.flag WHEN 0 THEN '非常满意'  WHEN 1 THEN '满意' WHEN 2 THEN  '一般' ELSE '不满意' END evaluate_flag_value "
 				;
 		from =  " FROM wash_ord_order a"
 				+" LEFT JOIN wash_device b ON a.device_id = b.id "

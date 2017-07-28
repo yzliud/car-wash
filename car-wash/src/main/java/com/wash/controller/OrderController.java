@@ -20,11 +20,15 @@ import com.jfinal.log.Log;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.Record;
+import com.samehope.common.utils.SignUtils;
 import com.samehope.common.utils.UuidUtils;
+import com.samehope.common.utils.XmlUtils;
 import com.samehope.core.render.JsonResult;
 import com.samehope.plugin.wechat.WechatKit;
 import com.samehope.plugin.wechat.jspay.WechatPay;
 import com.samehope.plugin.wechat.model.WechatConfig;
+import com.swiftpass.SwiftPay;
+import com.swiftpass.SwiftpassConfig;
 import com.wash.Consts;
 import com.wash.Global;
 import com.wash.model.WashCompanyPurse;
@@ -58,7 +62,7 @@ public class OrderController extends Controller{
 			}else{
 				setAttr("washMember", washMember);
 				
-				Map<String, Object> mapFee = OrderService.reckonFee(washMember.getCardNum(), "", "");
+				Map<String, Object> mapFee = OrderService.reckonFee(washMember.getCarNumber(), "", "");
 				
 				BigDecimal totalFee = (BigDecimal)mapFee.get("totalFee");
 				//BigDecimal discountFee = (BigDecimal)mapFee.get("discountFee");
@@ -166,14 +170,22 @@ public class OrderController extends Controller{
 				Map<String,String> map = new HashMap<String,String>();
 				map.put("orderId", orderNo);
 				map.put("payMoney", realFee.doubleValue()+"");
+//				map.put("sub_openid", openId);
 				map.put("controllerKey", "/car/order");
 				map.put("methodName", "forward");
+				
 				WechatConfig wechatConfig = WechatConfig.getWechatConfig(PropKit.use("wx_config.properties").get("appid")
 						, PropKit.use("wx_config.properties").get("secret")
 						, PropKit.use("wx_config.properties").get("partner")
 						, PropKit.use("wx_config.properties").get("partnerkey")
 						, openId);
 				WechatKit.toJspayOuth2(wechatConfig, map, getRequest(), getResponse());
+//				StringBuffer url = getRequest().getRequestURL(); 
+//		        String tempContextUrl = url.delete(url.length() - getRequest().getRequestURI().length(), url.length()).append(getRequest().getServletContext().getContextPath()).toString(); 
+//		        map.put("domain_url", tempContextUrl);
+//		        SwiftPay.pay(map, getRequest());
+//		        setAttr("domain_url",tempContextUrl);
+//		        renderJsp("pay.jsp");
 			}
 		}else{
 			woo.setRealFee(BigDecimal.ZERO);
@@ -213,6 +225,89 @@ public class OrderController extends Controller{
 					, openId);
 			WechatKit.toJspayOuth2(wechatConfig, map, getRequest(), getResponse());
 		}
+	}
+	
+	@Clear
+	public void payBackSwif() throws Exception{
+		log.info("支付回调");
+		getRequest().setCharacterEncoding("utf-8");
+		getResponse().setCharacterEncoding("utf-8");
+		getResponse().setHeader("Content-type", "text/html;charset=UTF-8");
+        String resString = XmlUtils.parseRequst(getRequest());
+        log.info("通知内容：" + resString);
+        
+        String respString = "fail";
+        if(resString != null && !"".equals(resString)){
+            Map<String,String> map = XmlUtils.toMap(resString.getBytes(), "utf-8");
+            String res = XmlUtils.toXml(map);
+            log.info("通知内容：" + res);
+            if(map.containsKey("sign")){
+                if(!SignUtils.checkParam(map, SwiftpassConfig.key)){
+                    res = "验证签名不通过";
+                    respString = "fail";
+                }else{
+                    String status = map.get("status");
+                    if(status != null && "0".equals(status)){
+                        String result_code = map.get("result_code");
+                        if(result_code != null && "0".equals(result_code)){
+                            String transactionId = map.get("transaction_id");
+                    		String orderId = map.get("out_trade_no");
+                            //此处可以在添加相关处理业务，校验通知参数中的商户订单号out_trade_no和金额total_fee是否和商户业务系统的单号和金额是否一致，一致后方可更新数据库表中的记录。
+                            
+                            Date date = new Date();
+            				//查询订单信息
+            				WashOrdOrder woo = WashOrdOrder.dao.findFirst("select * from wash_ord_order where order_no = ? and del_flag = 0 ", orderId);
+            				if(woo != null ){
+            					//订单为未支付， 才进行处理
+            					if(Consts.orderStatus_0.equals(woo.getOrderStatus())){
+            						woo.setOrderStatus(Consts.orderStatus_1);
+            						woo.setPayTime(date);
+            						woo.setPaySerialNumber(transactionId);
+            						woo.setUpdateDate(date);
+            						woo.update();
+            						
+            						int flowId = Db.queryInt(" select _nextval('flow_sn') ");
+            						
+            						//流水
+            						WashTFlow washTFlow = new WashTFlow();
+            						washTFlow.setId(flowId+"");
+            						washTFlow.setTSn(woo.getOrderNo());
+            						washTFlow.setTType("00");
+            						washTFlow.setMemberId(woo.getCarPersonId());
+            						washTFlow.setTppType(0);
+            						washTFlow.setTAmount(woo.getRealFee());
+            						washTFlow.setTppSn(woo.getPaySerialNumber());
+            						washTFlow.save();
+            						
+            						//公司账户
+            						WashCompanyPurse washCompanyPurse = WashCompanyPurse.dao.findFirst("select * from wash_company_purse order by t_datetime desc ");
+            						BigDecimal balance = BigDecimal.ZERO;
+            						if(null != washCompanyPurse){
+            							balance = washCompanyPurse.getBalance();
+            						}
+            						BigDecimal income = woo.getRealFee();
+            						WashCompanyPurse wcp = new WashCompanyPurse();
+            						wcp.setId(UuidUtils.getUuid());
+            						wcp.setUid(woo.getCarPersonId());
+            						wcp.setTFlowNo(flowId+"");
+            						wcp.setTType("00");
+            						wcp.setTDatetime(new Date());
+            						wcp.setIncome(income);
+            						wcp.setPay(BigDecimal.ZERO);
+            						wcp.setBalance(balance.add(income));
+            						wcp.save();
+            						//更新优惠卷使用信息
+            						Db.update("update wash_coupon_detail set status = 2, update_date = now() where order_no = ? ", orderId);
+            						
+            						respString = "success";
+            					}
+            				}
+                        } 
+                    } 
+                }
+            }
+        }
+        getResponse().getWriter().write(respString);
 	}
 	
 	/**
@@ -311,7 +406,7 @@ public class OrderController extends Controller{
 		
 		select = " SELECT a.id,a.order_no,a.real_fee,a.order_time,a.pay_time,a.end_time,a.car_number,b.name device_name,b.address device_address,c.nick_name,d.flag evaluate_flag,d.status evaluate_status,d.evaluate,d.add_evaluate,a.order_status "
 				+" ,CASE a.order_status WHEN 0 THEN '待付款'  WHEN 1 THEN '等待洗车' WHEN 2 THEN  '洗车中' WHEN 3 THEN  '待评价' WHEN 9 THEN  '已完结' ELSE '' END order_status_value "
-				+" ,CASE d.flag WHEN 0 THEN '好评'  WHEN 1 THEN '中评' WHEN 2 THEN  '差评' ELSE '' END evaluate_flag_value "
+				+" ,CASE d.flag WHEN 0 THEN '非常满意'  WHEN 1 THEN '满意' WHEN 2 THEN  '一般' ELSE '不满意' END evaluate_flag_value "
 				;
 		from =  " FROM wash_ord_order a"
 				+" LEFT JOIN wash_device b ON a.device_id = b.id"
@@ -319,7 +414,7 @@ public class OrderController extends Controller{
 				+" LEFT JOIN wash_ord_evaluate d ON a.id = d.id"
 				+" WHERE  a.del_flag = 0 and car_person_id = ? and a.order_status != 0 order by a.update_date desc ";
 		recordList = Db.paginate(pageNumber, Consts.PageSize, select, from, memberId);
-		log.debug("orderHis:" + select + from + ";--" + memberId);
+		log.info("orderHis:" + select + from + ";--" + memberId);
 		renderJson(recordList);
 	}
 	
