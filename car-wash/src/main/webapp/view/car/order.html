@@ -174,8 +174,25 @@
         })
         
         $('.SelectcouponBlock').click(function(){
-            $('.canSelCouponIterms').removeClass('none');
+        	<#if wcdList??>
+        		<#if (wcdList?size>0) >
+        			$('.canSelCouponIterms').removeClass('none');
+        		<#else>
+	        		layer.open({
+						content: '暂无优惠卷',
+						skin: 'msg',
+						time: 1
+					});
+	        	</#if>
+            <#else>
+	        	layer.open({
+					content: '暂无优惠卷',
+					skin: 'msg',
+					time: 1
+				});
+        	</#if>
         })
+        
         $('.canSelCouponIterms .payInfo').click(function(e){
             var couponName = $(this).find('.title').text();
             var discountPrice = $(this).find('.disPrice').text().replace(/[^0-9]+/g,'');

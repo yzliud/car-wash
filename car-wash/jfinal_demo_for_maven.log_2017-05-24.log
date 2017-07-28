@@ -1,3 +1,0 @@
-
-2017-05-24 11:22:19
-[WARN]-[Thread: main]-[com.aliyun.mns.client.Utils.getHttpURI()]: 仅支持http协议。Endpoint必须以http://或https://开头。
